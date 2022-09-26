@@ -13129,14 +13129,14 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Slurm-partitions">Slurm partitions<a class="anchor-link" href="#Slurm-partitions">&#182;</a></h2><p>The new hpc service Janus provides user access to an array of different compute instances. These instances are accessed through different slurm partitions.</p>
+<h2 id="Slurm-partitions">Slurm partitions<a class="anchor-link" href="#Slurm-partitions">&#182;</a></h2><p>The new hpc service Nimbus provides user access to an array of different compute instances. These instances are accessed through different slurm partitions.</p>
 <p>In order to list the partitions issue the following command:</p>
 <p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sinfo</code></p>
 <p>which will list the partitions, the nodes in the partitions, availability and the current state:</p>
-<p><img src="./images/janus-partitions.png" alt="linux-login"></p>
-<p>The partitions follow a naming converntion:</p>
+<p><img src="./images/nimbus_partitions.png" alt="linux-login"></p>
+<p>The partitions follow a naming converntion</p>
 <p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[pricing tier]-[instance type]-[no of cpus-per-node]</code></p>
-<p>So, for example the partition <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">spot-hbv3-120</code> is for spot priced hbv3 instances with 120 CPUs per node, while <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">paygo-hbv3-32</code> is for pay-as-you-go priced instances with 32 CPUs per node.</p>
+<p>So, for example the partition <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">spot-hbv3-120</code> is for spot priced hbv3 instances with 120 CPUs per node, while <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">paygo-hc-44</code> is for pay-as-you-go priced hc instances with 44 CPUs per node.</p>
 
 </div>
 </div>
@@ -13263,7 +13263,7 @@ div#notebook {
 <ul>
 <li>The <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hb*</code> instances are suggested for applications driven by memory bandwidth such as OpenFOAM and ANSYS.</li>
 <li>The <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hc*</code> &amp; <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">f*</code> instances are suggested for applications driven by compute such as HPL and ORCA.</li>
-<li>The <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">n*</code> partitions are suggested for GPU accelerated applications, like NAMD.</li>
+<li>The <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">n*</code> partitions are for GPU accelerated workloads and visualization sessions.</li>
 </ul>
 <p>If in doubt - ask or test!</p>
 
@@ -13287,45 +13287,8 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Restrictions-on-Instances">Restrictions on Instances<a class="anchor-link" href="#Restrictions-on-Instances">&#182;</a></h3><p>Some restrictions are in place on the resources available. At present in the phase 1 system, while the accounting back-end is not yet implemented, users do not have access to the pay-as-you-go instances, only spot.</p>
-<p>Other restrictions on the slurm resources are in place on the spot instances:</p>
-<table>
-<thead><tr>
-<th>Limit</th>
-<th>Partitions</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Maximum and minimum nodes per job equal to 1</td>
-<td>all *-fsv2-*</td>
-</tr>
-<tr>
-<td>Maximum number of nodes per job equal to 4</td>
-<td>all *-hb*-*</td>
-</tr>
-<tr>
-<td>Maximum number of nodes per job equal to 8</td>
-<td>all *-hc-*</td>
-</tr>
-<tr>
-<td>Maximum number of Trackable RESources (TRES) per job across all spot GPU partitions equal to 3</td>
-<td>*-ncv3*-* &amp; *-ndv2*</td>
-</tr>
-<tr>
-<td>Maximum time per job of 36 hours</td>
-<td>All</td>
-</tr>
-<tr>
-<td>Minimum number of nodes per job equal to 2 on all RDMA connected nodes except GPU ones</td>
-<td>*-hb*-* &amp; *-hc44-*</td>
-</tr>
-<tr>
-<td>Only whole nodes can be allocated to jobs</td>
-<td>All</td>
-</tr>
-</tbody>
-</table>
+<h3 id="Restrictions-on-Instances">Restrictions on Instances<a class="anchor-link" href="#Restrictions-on-Instances">&#182;</a></h3><p>The only restriction put in place by Research Computing on the size of jobs you are able to run on Nimbus is to restrict the number of nodes you can run on using the fsv2 instances to one. These are RDMA connected, and you cannot run single jobs across multiple nodes, hence the restriction.</p>
+<p>All other restrictions are put in place by your Resource Allocation Administrators using the finance portal. Should you wish to change the restrictions either do so in the portal, or contact the person that has given you access to the resource allocation and request they do so.</p>
 
 </div>
 </div>
@@ -13333,63 +13296,99 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Indicative-Cost-of-Instances">Indicative Cost of Instances<a class="anchor-link" href="#Indicative-Cost-of-Instances">&#182;</a></h3><p>Full accounting, including transferral of premium budgets and full costings for the compute instances and storage will be brought in during phase 2 of the cloud HPC system.</p>
-<p>However it is important to emphasise that <strong>different compute instances will incur different costs</strong>.</p>
-<p>In order to highlight this point we can examine the current <strong>spot</strong> costs for the instances available as listed by Azure:</p>
+<h3 id="Indicative-Cost-of-Instances">Indicative Cost of Instances<a class="anchor-link" href="#Indicative-Cost-of-Instances">&#182;</a></h3><p>It is important to emphasise that <strong>different compute instances will incur different costs</strong>. Shortly a cost calculator will be launched that lists the current prices for each compute instance, as well as allowing you to cost up resources for inclusion in funding proposals.</p>
+<p>In order to highlight this point we can examine the current costs for the instances available:</p>
 <table>
 <thead><tr>
-<th>Instance type</th>
+<th>meterName</th>
 <th>£/CPUh</th>
+<th>date</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>fsv2</td>
-<td>0.0106</td>
+<td>paygo-fsv2-1</td>
+<td>0.100958</td>
+<td>2022-09-25</td>
 </tr>
 <tr>
-<td>hb</td>
-<td>0.0077</td>
+<td>spot-fsv2-1</td>
+<td>0.0116964</td>
+<td>2022-09-25</td>
 </tr>
 <tr>
-<td>hbv2</td>
-<td>0.0077</td>
+<td>paygo-hbv2-120</td>
+<td>0.040606</td>
+<td>2022-09-25</td>
 </tr>
 <tr>
-<td>hbv3_120</td>
-<td>0.0116</td>
+<td>spot-hbv2-120</td>
+<td>0.00470216</td>
+<td>2022-09-25</td>
 </tr>
 <tr>
-<td>hc</td>
-<td>0.0147</td>
+<td>paygo-hbv3-120</td>
+<td>0.040606</td>
+<td>2022-09-25</td>
 </tr>
 <tr>
-<td>ncv3</td>
-<td>0.0835</td>
+<td>spot-hbv3-120</td>
+<td>0.0141916</td>
+<td>2022-09-25</td>
 </tr>
 <tr>
-<td>ncv3r</td>
-<td>0.0918</td>
+<td>paygo-hb-60</td>
+<td>0.0514354</td>
+<td>2022-09-25</td>
 </tr>
 <tr>
-<td>ndv2</td>
-<td>0.0564</td>
+<td>spot-hb-60</td>
+<td>0.00595696</td>
+<td>2022-09-25</td>
+</tr>
+<tr>
+<td>paygo-hc-44</td>
+<td>0.0974467</td>
+<td>2022-09-25</td>
+</tr>
+<tr>
+<td>spot-hc-44</td>
+<td>0.0112851</td>
+<td>2022-09-25</td>
+</tr>
+<tr>
+<td>paygo-ncv3-12</td>
+<td>0.663412</td>
+<td>2022-09-25</td>
+</tr>
+<tr>
+<td>spot-ncv3-12</td>
+<td>0.238165</td>
+<td>2022-09-25</td>
+</tr>
+<tr>
+<td>paygo-ncv3r-24</td>
+<td>0.729737</td>
+<td>2022-09-25</td>
+</tr>
+<tr>
+<td>spot-ncv3r-24</td>
+<td>0.261979</td>
+<td>2022-09-25</td>
+</tr>
+<tr>
+<td>paygo-ndv2r-40</td>
+<td>0.716491</td>
+<td>2022-09-25</td>
+</tr>
+<tr>
+<td>spot-ndv2r-40</td>
+<td>0.211437</td>
+<td>2022-09-25</td>
 </tr>
 </tbody>
 </table>
-<p>While it is important to remember that these costs will be different than the final costs, these give a rough indication of the relative costings associated with a CPUh on each instance.</p>
 
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
-    <h3 id="-Pricing%20"><i class="fa fa-info-circle"></i> Pricing
-</h3>
-    <p>You can read more about the cost of compute instances here:<a href="https://azure.microsoft.com/en-gb/pricing/details/virtual-machines/linux/">https://azure.microsoft.com/en-gb/pricing/details/virtual-machines/linux/</a></p>
-</div>
 </div>
 </div>
 </div>

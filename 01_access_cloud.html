@@ -13093,20 +13093,46 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Accessing-the-Cloud-HPC-Facility">Accessing the Cloud HPC Facility<a class="anchor-link" href="#Accessing-the-Cloud-HPC-Facility">&#182;</a></h1><h2 id="Overview:">Overview:<a class="anchor-link" href="#Overview:">&#182;</a></h2><ul>
+<h1 id="Accessing-Nimbus">Accessing Nimbus<a class="anchor-link" href="#Accessing-Nimbus">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="w3-panel w3-leftbar w3-border-green w3-pale-green w3-padding-small">
+    <h3 id="-Overview%3A%20"><i class="fa fa-file-o"></i> Overview:
+</h3>
+    <ul>
 <li><strong>Teaching:</strong> 10 min</li>
 <li><strong>Exercises:</strong> 0 min</li>
 </ul>
 <p><strong>Questions</strong></p>
 <ul>
-<li>How do I access the Cloud HPC Facility?</li>
-<li>Where do I find out more information about ssh and security?</li>
+<li>Where can I run the shell?</li>
+<li>What is Open on Demand?</li>
+<li>How do I connect to Nimbus</li>
 </ul>
 <p><strong>Objectives</strong></p>
 <ul>
-<li>Understand what ssh is, and securing your connection</li>
-<li>Be able to log-on to the Cloud HPC facility</li>
+<li>Get access to the Nimbus in a terminal, either locally or through the Open On Demand service</li>
 </ul>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This episode details how to access The University of Bath's Cloud HPC Facility: Nimbus</p>
+<p>We can access Nimbus in several ways:</p>
+<ul>
+<li>From the terminal on your local machine</li>
+<li>From the Open On Demand Service</li>
+<li>From an <a href="https://www.ssh.com/academy/ssh/client#:~:text=An%20SSH%20client%20is%20a,Windows%20and%20IBM%20z%2FOS.">ssh client on your local machine</a> </li>
+</ul>
+<p>Accessing the new cloud HPC service is through ssh (secure shell).</p>
+<p>For the purposes of this workshop you can access the terminal on your own machine, use an ssh client or we can use the the new Open on Demand service to access the Nimbus login nodes in the terminal.</p>
 
 </div>
 </div>
@@ -13138,7 +13164,7 @@ div#notebook {
 </ul>
 <p>When you create a SSH key pair you will be prompted to provide a passphrase. This is effectively password for your private key and like a password should be kept secret. Now when you try to use the key, you should be asked for your key pair passphase (which you entered when you created the key pair) rather than your remote machine password.</p>
 <p>Access to the HPC cloud service can be through key pairs, but <strong>ensure your key pair is protected by a passphrase</strong>.</p>
-<h3 id="More-details-on-ssh-and-security">More details on ssh and security<a class="anchor-link" href="#More-details-on-ssh-and-security">&#182;</a></h3><p>For further details on ssh, and security you can visit the ARC lesson:</p>
+<h3 id="More-details-on-ssh-and-security">More details on ssh and security<a class="anchor-link" href="#More-details-on-ssh-and-security">&#182;</a></h3><p>For further details on ssh, and security you can visit the Research Computing lesson:</p>
 <p><a href="https://arc-lessons.github.io/security/00_schedule.html">https://arc-lessons.github.io/security/00_schedule.html</a></p>
 </div>
 </div>
@@ -13147,13 +13173,32 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Logging-onto-the-University-Linux-service">Logging onto the University Linux service<a class="anchor-link" href="#Logging-onto-the-University-Linux-service">&#182;</a></h2><p>The cloud HPC service can only be accessed either on campus or from behind the University VPN. For details on accessing the VPN you can visit <a href="https://www.bath.ac.uk/guides/setting-up-vpn-on-your-device/">https://www.bath.ac.uk/guides/setting-up-vpn-on-your-device/</a>.</p>
-<p>An alternative is to go through the University linux service (which is what we shall do here - but if behind the VPN you can jump staight to logging onto the cloud HPC service).</p>
-<p>Let's try logging on to the University linux service. (For a more in depth description visit our <a href="https://arc-lessons.github.io/security/02_ssh.html">guide on how to login</a>).</p>
-<p>You can log-in to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">linux.bath.ac.uk</code> with you University username and password using the following command from the terminal window:</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">ssh [userID]@linux.bath.ac.uk</code></p>
-<p>Insert your University credentials and you should be greeted with the following log-in message:</p>
-<p><img src="./images/linux-login.png" alt="linux-login"></p>
+<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
+    <h3 id="-ssh-from-Windows-%26-Linux%2FMac%20"><i class="fa fa-info-circle"></i> ssh from Windows &amp; Linux/Mac
+</h3>
+    <p>In order to access Nimbus via ssh first connect to the <a href="https://www.bath.ac.uk/guides/setting-up-vpn-on-your-device/#setting-up-vpn">University of Bath VPN</a>.</p>
+<h3 id="Access-from-Window's-10-Built-in-SSH-client">Access from Window's 10 Built in SSH client<a class="anchor-link" href="#Access-from-Window's-10-Built-in-SSH-client">&#182;</a></h3><p>The Microsoft PowerShell team decided to port OpenSSH (both the client and the server) to Windows in 2015 and is enabled by default in the April 2018 Update.</p>
+<p>To use the OpenSSH client on Windows 10 to connect to Nimbus, simply open a PowerShell window or a command prompt window and run the ssh command:</p>
+<div class="highlight"><pre><span></span>ssh username@nimbus.hpc.bath.ac.uk
+</pre></div>
+<p>Alternatively you can install Windows Subsystem for Linux on your Windows machine and run a Linux distribution e.g: <a href="https://ubuntu.com/wsl">https://ubuntu.com/wsl</a>.</p>
+<h3 id="Access-from-Linux/Mac:">Access from Linux/Mac:<a class="anchor-link" href="#Access-from-Linux/Mac:">&#182;</a></h3><p>Simply open a terminal and use the following command:</p>
+<div class="highlight"><pre><span></span>ssh username@nimbus.hpc.bath.ac.uk
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Open-on-Demand">Open on Demand<a class="anchor-link" href="#Open-on-Demand">&#182;</a></h2><p>Research Computing have set up a new way to access the University's HPC services using <a href="https://openondemand.org/">Open on Demand</a>. Open on Demand provides a web based portal to the University's HPC clusters, allowing users to create and monitor workloads, run GUI applications and connect via SSH.</p>
+<p>To log into the service open <a href="ood.hpc.bath.ac.uk">ood.hpc.bath.ac.uk</a> in your web browser and log in using your University credentials:</p>
+<p><img src="./images/ood_login.png" alt="OOD Login"></p>
+<p>To Open up an ssh session click <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">Clusters</code> at the top of the screen and in the drop down menu select <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&gt;_Nimbus HPC Shell Access</code>:</p>
+<p><img src="./images/ood_nimbus_shell_drop.png" alt="OOD Login"></p>
+<p>You will now have a secure shell connected to Nimbus open in a web based terminal hosted in the Open on Demand service:</p>
+<p><img src="./images/ood_ssh_session.png" alt="OOD Login"></p>
 
 </div>
 </div>
@@ -13161,34 +13206,21 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Logging-onto-the-Cloud-HPC-service">Logging onto the Cloud HPC service<a class="anchor-link" href="#Logging-onto-the-Cloud-HPC-service">&#182;</a></h2><p>Now we are on the University linux service (or behind the University's VPN) we can try logging onto the new cloud HPC environment.</p>
-<p>The phase 1 cloud HPC service is known as Janus, and you can log-on with the following command from inside a terminal connected to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">linux.bath.ac.uk</code>:</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">ssh [userID]@janus.hpc.bath.ac.uk</code></p>
-<p>You should be greeted with the janus login:</p>
-<p><img src="./images/janus-login.png" alt="linux-login"></p>
-
+<h1 id="Congratulations:-You-are-now-in-the-Cloud!">Congratulations: You are now in the Cloud!<a class="anchor-link" href="#Congratulations:-You-are-now-in-the-Cloud!">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Congratulations!-You're-now-in-the-cloud!!"><strong><em>Congratulations! You're now in the cloud!!</em></strong><a class="anchor-link" href="#Congratulations!-You're-now-in-the-cloud!!">&#182;</a></h3>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="On-Campus">On Campus<a class="anchor-link" href="#On-Campus">&#182;</a></h3><p>It is possible to log onto the University linux service from a University PC with:</p>
-<ul>
-<li>‘Start’ → All Programs → Xming → linux</li>
+<div class="w3-panel w3-leftbar w3-border-green w3-pale-green w3-padding-small">
+    <h3 id="-Key-Points%3A%20"><i class="fa fa-key"></i> Key Points:
+</h3>
+    <ul>
+<li>We can access the Nimbus cluster via ssh to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">nimbus.hpc.bath.ac.uk</code></li>
+<li>Open on Demand can be used to get a secure shell session directly in your web browser</li>
 </ul>
-<p>This launches a program called ‘Kitty’ which will try to connect to the linux service. A window should open which asks for <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">login as:</code>. Insert your University username, and you will be prompted for a password:</p>
-<p><img src="./images/linux-password.png" alt="linux-password"></p>
-<p>If you have successfully logged on, the window will display the same University Linux welcome message above.</p>
-<p>The process for accessing the cloud HPC service from this session is the same as above.</p>
-
+</div>
 </div>
 </div>
 </div>
@@ -13196,7 +13228,7 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="w3-bar w3-blue-grey">
-<a href="./00_setup.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
+<a href="./00_schedule.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
 <a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
 <a href="./02_slurm.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
 </div>
