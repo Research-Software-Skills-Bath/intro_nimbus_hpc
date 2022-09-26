@@ -13093,7 +13093,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Opening-a-terminal-in-Open-On-Demand">Opening a terminal in Open On Demand<a class="anchor-link" href="#Opening-a-terminal-in-Open-On-Demand">&#182;</a></h1>
+<h1 id="Accessing-Nimbus">Accessing Nimbus<a class="anchor-link" href="#Accessing-Nimbus">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13104,17 +13104,18 @@ div#notebook {
     <h3 id="-Overview%3A%20"><i class="fa fa-file-o"></i> Overview:
 </h3>
     <ul>
-<li><strong>Teaching:</strong> 5 min</li>
+<li><strong>Teaching:</strong> 10 min</li>
 <li><strong>Exercises:</strong> 0 min</li>
 </ul>
 <p><strong>Questions</strong></p>
 <ul>
 <li>Where can I run the shell?</li>
 <li>What is Open on Demand?</li>
+<li>How do I connect to Nimbus</li>
 </ul>
 <p><strong>Objectives</strong></p>
 <ul>
-<li>Get access to the terminal, either locally or through the Open On Demand service</li>
+<li>Get access to the Nimbus in a terminal, either locally or through the Open On Demand service</li>
 </ul>
 </div>
 </div>
@@ -13123,10 +13124,15 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Accessing the new cloud HPC service is through ssh (secure shell) in the terminal, or through an ssh client.</p>
-<p>For the purposes of this workshop you can use your own ssh client, access the terminal on your local machine or we can use the the new Open on Demand service to access a terminal.</p>
-<p>This episode details how to get started on Open On Demand service and accessing Nimbus through the the terminal on .</p>
-<p>This service runs a common Linux operating system with similar appearance to that found on MacOs and HPC services. You can access this service from any PC or laptop by connecting to the JupyterHub service and logging in.</p>
+<p>This episode details how to access The University of Bath's Cloud HPC Facility: Nimbus</p>
+<p>We can access Nimbus in several ways:</p>
+<ul>
+<li>From the terminal on your local machine</li>
+<li>From the Open On Demand Service</li>
+<li>From an <a href="https://www.ssh.com/academy/ssh/client#:~:text=An%20SSH%20client%20is%20a,Windows%20and%20IBM%20z%2FOS.">ssh client on your local machine</a> </li>
+</ul>
+<p>Accessing the new cloud HPC service is through ssh (secure shell).</p>
+<p>For the purposes of this workshop you can access the terminal on your own machine, use an ssh client or we can use the the new Open on Demand service to access the Nimbus login nodes in the terminal.</p>
 
 </div>
 </div>
@@ -13134,8 +13140,63 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Getting-Started">Getting Started<a class="anchor-link" href="#Getting-Started">&#182;</a></h2><p>First we need to log-on to the server: <a href="https://rss.jupyterhub.bath.ac.uk">https://rss.jupyterhub.bath.ac.uk</a>, you should be redirected to use your University account via the Microsoft web login.  This should start a jupyterhub service running on the server and return you to a page that looks like:</p>
-<p><img src="./images/jhub.png" alt="Create new notebook"></p>
+<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
+    <h3 id="-SSH%20"><i class="fa fa-info-circle"></i> SSH
+</h3>
+    <p>As HPC services are remote machines, interaction is done over an encrypted communication channel called Secure Shell version 2 (SSH-2). This allows command-line access to one of the login nodes of a HPC service, from which you can run commands or use a command-line text editor to edit files.</p>
+<h3 id="Security">Security<a class="anchor-link" href="#Security">&#182;</a></h3><p>Users and system operators have a shared responsibility to ensure the security of resources. System operators monitor the system, ensure security patches are up-to-date and that the systems is configured to restrict access correctly e.g. so that users cannot see each others data/files by default.</p>
+<p>Users should follow best practice to mitigate the risk of accounts and access details being compromised, e.g. we all know that we must keep our passwords secret. You shouldn't make your files accessible to others unless necessary.</p>
+<h3 id="Strong-passwords">Strong passwords<a class="anchor-link" href="#Strong-passwords">&#182;</a></h3><p>A strong password describes a password that is difficult to detect by both humans and computer programs, effectively protecting data from unauthorized access. A strong password consists of at least twelve characters (and the more characters, the stronger the password) that are a combination of letters, numbers and symbols  (@, !, &amp;, ^ etc) if allowed. Passwords are typically case-sensitive, so a strong password contains letters in both uppercase and lowercase. Strong passwords also do not contain words that can be found in a dictionary or parts of the user's own name.</p>
+<h3 id="SSH-key-pairs">SSH key pairs<a class="anchor-link" href="#SSH-key-pairs">&#182;</a></h3><p>An alternative to using a password is to use an ssh key-pair. A public key pair consists of two parts, a public part and a private part which are related. One is used to lock the message the other is used to unlock the message:</p>
+<ul>
+<li>The public part is used to lock (encrypt) the message so that it can be sent over the internet and can be shared.</li>
+<li>The private part is used to unlock (decrpyt) the message and should not be shared.</li>
+</ul>
+<h3 id="Set-up-a-key-pair">Set up a key pair<a class="anchor-link" href="#Set-up-a-key-pair">&#182;</a></h3><p>The SSH key pair consists of a private part and a public part. The public key can be put on remote machines to allow you to log-in without the use of a password. You keep the private part of the key secure on your local machine protected with a passphrase.</p>
+<p>Public key encryption uses fancy maths to enable secure communication over an open channel. There are a number of methods the most common being RSA) which uses prime numbers. If you are going to use this you should use a key size of at least 2048 and preferably 4096. Public keys can be broken with brute force computation and the longer the key the more secure it is.</p>
+<p>An alternative encryption method and the one we recommend you to use are based on EdDSA (Ed25519). For our purposes the key pair works in the same way. Your public key can go on the remote resource or service and the private key is kept protected on your local machine. You can generate a key pair with:</p>
+<p>ssh-keygen -o -a 100 -t ed25519</p>
+<ul>
+<li>ssh-keygen is the command to generate the key pair</li>
+<li>-o specifies to use a strong format to save the key</li>
+<li>-a 100 increases the strength of encryption with your passphrase</li>
+<li>-t ed25519 specifies the encryption method used</li>
+</ul>
+<p>When you create a SSH key pair you will be prompted to provide a passphrase. This is effectively password for your private key and like a password should be kept secret. Now when you try to use the key, you should be asked for your key pair passphase (which you entered when you created the key pair) rather than your remote machine password.</p>
+<p>Access to the HPC cloud service can be through key pairs, but <strong>ensure your key pair is protected by a passphrase</strong>.</p>
+<h3 id="More-details-on-ssh-and-security">More details on ssh and security<a class="anchor-link" href="#More-details-on-ssh-and-security">&#182;</a></h3><p>For further details on ssh, and security you can visit the Research Computing lesson:</p>
+<p><a href="https://arc-lessons.github.io/security/00_schedule.html">https://arc-lessons.github.io/security/00_schedule.html</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
+    <h3 id="-ssh-from-Windows-%26-Linux%2FMac%20"><i class="fa fa-info-circle"></i> ssh from Windows &amp; Linux/Mac
+</h3>
+    <p>In order to access Nimbus via ssh first connect to the <a href="https://www.bath.ac.uk/guides/setting-up-vpn-on-your-device/#setting-up-vpn">University of Bath VPN</a>.</p>
+<h3 id="Access-from-Window's-10-Built-in-SSH-client">Access from Window's 10 Built in SSH client<a class="anchor-link" href="#Access-from-Window's-10-Built-in-SSH-client">&#182;</a></h3><p>The Microsoft PowerShell team decided to port OpenSSH (both the client and the server) to Windows in 2015 and is enabled by default in the April 2018 Update.</p>
+<p>To use the OpenSSH client on Windows 10 to connect to Nimbus, simply open a PowerShell window or a command prompt window and run the ssh command:</p>
+<div class="highlight"><pre><span></span>ssh username@nimbus.hpc.bath.ac.uk
+</pre></div>
+<p>Alternatively you can install Windows Subsystem for Linux on your Windows machine and run a Linux distribution e.g: <a href="https://ubuntu.com/wsl">https://ubuntu.com/wsl</a>.</p>
+<h3 id="Access-from-Linux/Mac:">Access from Linux/Mac:<a class="anchor-link" href="#Access-from-Linux/Mac:">&#182;</a></h3><p>Simply open a terminal and use the following command:</p>
+<div class="highlight"><pre><span></span>ssh username@nimbus.hpc.bath.ac.uk
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Open-on-Demand">Open on Demand<a class="anchor-link" href="#Open-on-Demand">&#182;</a></h2><p>Research Computing have set up a new way to access the University's HPC services using <a href="https://openondemand.org/">Open on Demand</a>. Open on Demand provides a web based portal to the University's HPC clusters, allowing users to create and monitor workloads, run GUI applications and connect via SSH.</p>
+<p>To log into the service open <a href="ood.hpc.bath.ac.uk">ood.hpc.bath.ac.uk</a> in your web browser and log in using your University credentials:</p>
+<p><img src="./images/ood_login.png" alt="OOD Login"></p>
+<p>To Open up an ssh session click <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">Clusters</code> at the top of the screen and in the drop down menu select <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&gt;_Nimbus HPC Shell Access</code>:</p>
+<p><img src="./images/ood_nimbus_shell_drop.png" alt="OOD Login"></p>
 
 </div>
 </div>
@@ -13143,17 +13204,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Click on the new button and select terminal to launch the terminal Linux session which we will use through the rest of the lesson. This should open a new tab that looks like:</p>
-<p><img src="./images/jhub-terminal.png" alt="terminal"></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>You are now ready to start the lesson.  Details of how to access the University Cloud HPC service follow.</p>
-
+<h1 id="Congratulations:-You-are-now-in-the-Cloud!">Congratulations: You are now in the Cloud!<a class="anchor-link" href="#Congratulations:-You-are-now-in-the-Cloud!">&#182;</a></h1>
 </div>
 </div>
 </div>
