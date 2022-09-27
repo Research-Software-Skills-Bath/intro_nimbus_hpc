@@ -13280,6 +13280,7 @@ div#notebook {
 </ul>
 <p>Spot pricing allows access to unused Azure compute capacity at large discounts, up to 90%, compared to Pay-As-You-Go prices. The drawback is that the job can be interrupted at any time and be evicted, depending on the available Azure capacity.</p>
 <p>Deciding whether to use the Spot or Pay-As-You-Go tiers will depend on how easy it is to pick up your calculation should it be evicted, the time scales for you calculation and your available budget.</p>
+<p>If your job is subject to an eviction you will recieve a message in the stdout of the job, and the status in the finance portal will be <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">EVICTED</code>. At present if a job is evicted you will not be charged for it, though this may change in future.</p>
 
 </div>
 </div>
