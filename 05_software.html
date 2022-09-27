@@ -13105,7 +13105,7 @@ div#notebook {
 </h3>
     <ul>
 <li><strong>Teaching:</strong> 10 min</li>
-<li><strong>Exercises:</strong> 5 min</li>
+<li><strong>Exercises:</strong> 0 min</li>
 </ul>
 <p><strong>Questions</strong></p>
 <ul>
@@ -13119,6 +13119,7 @@ div#notebook {
 <ul>
 <li>Know that software on Janus is managed with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">module</code> and understand how to use it</li>
 <li>Know that software is collected into groups on different instances</li>
+<li>Know that software shouldnt be run on the login nodes</li>
 </ul>
 </div>
 </div>
@@ -13127,8 +13128,8 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="module"><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">module</code><a class="anchor-link" href="#module">&#182;</a></h2><p>On Janus <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">module</code> is used to manage different libraries and pieces of software.  Unlike you own machine where you likely have one set of up packages each running with the latest versions on Janus there are many different applications each with different versions and libraries that they rely on.  Tools like module ensure researchers can access the versions of applications and libraries they want and allow the service to be managed more easily.  It also means that the correct dependencies, typically libraries that are used to compile applications can be loaded automatically making life easier for users.</p>
-<p>You can check what modules are loaded when you first log-in to Janus:</p>
+<h2 id="module"><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">module</code><a class="anchor-link" href="#module">&#182;</a></h2><p>On Nimbus <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">module</code> is used to manage different libraries and pieces of software.  Unlike you own machine where you likely have one set of up packages each running with the latest versions, on Nimbus there are many different applications each with different versions and libraries that they rely on.  Tools like module ensure researchers can access the versions of applications and libraries they want and allow the service to be managed more easily.  It also means that the correct dependencies, typically libraries that are used to compile applications, can be loaded automatically making life easier for users.</p>
+<p>You can check what modules are loaded when you first log-in to Nimbus:</p>
 
 </div>
 </div>
@@ -13168,7 +13169,7 @@ gcc provides the standard serial gnu compiler suite, openmpi is the contains the
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The software modules will be updated as we build, test and broaden the software stack. Different modules are available depending on the instance type you wish to use. A combined list of all available modules built on the system is presented on the log-in node.</p>
-<p>Any module in</p>
+<p>The modules available in</p>
 <table>
 <thead><tr>
 <th>File path</th>
@@ -13186,7 +13187,7 @@ gcc provides the standard serial gnu compiler suite, openmpi is the contains the
 </tr>
 </tbody>
 </table>
-<p>are available and can be used on all instances.</p>
+<p>have not been compiled specifically for a particular compute instance, and are available and can be used on all instances.</p>
 <p>However the modules in</p>
 <p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/apps/modules/</code></p>
 <p>are seperated out by build toolchain and are built for a specific instance. You can check if these modules are available on the instance of your choice with the following command:</p>
@@ -13204,6 +13205,14 @@ gcc provides the standard serial gnu compiler suite, openmpi is the contains the
 
 <pre><code style="">module purge
 module load OpenFOAM/v1812-foss-2020a</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Software-Install-Requests">Software Install Requests<a class="anchor-link" href="#Software-Install-Requests">&#182;</a></h2><p>You can request Software installs on the system by contacting <a href="mailto:it-hpc@bath.ac.uk">Research Computing</a>.<br></p>
 
 </div>
 </div>

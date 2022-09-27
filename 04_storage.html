@@ -13144,7 +13144,7 @@ div#notebook {
 </li>
 <li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code>: Some compute instances have fast local storage located in this area, only accessible from the compute node. e.g. HBv3 (450GB), HBv2(450GB), HB(450GB), HC44(650GB)</p>
 </li>
-<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/burstbuffer/*/</code>: when running a job on a compute node you can access one of 26 blob stores in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/burstbuffer/*/</code>. An environment variable <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> is made available in the environment when running a job, and the job specific burstbuffer gets destroyed at the end of the job. You can use this space to store temporary files that are needed during a job run, bu not afterwards. e.g. by staging your input data in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code>, running your job there, and then only copying the outputs you re    uire back to either <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign</code> or <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/home/</code>.</p>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/burstbuffer/*/</code>: when running a job on a compute node you can access one of 26 blob stores in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/burstbuffer/*/</code>. An environment variable <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> is made available in the environment when running a job, and the job specific burstbuffer gets destroyed at the end of the job. You can use this space to store temporary files that are needed during a job run, bu not afterwards. e.g. by staging your input data in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code>, running your job there, and then only copying the outputs you require back to either <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign</code> or <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/home/</code>. The blob performance is 60 GBps shared by jobs running on each blob store (allocated in a round robin fashion).</p>
 </li>
 </ul>
 
@@ -13155,9 +13155,9 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Environment-Variables">Environment Variables<a class="anchor-link" href="#Environment-Variables">&#182;</a></h3><p>There are several environment variables to help you navigate the filesystem.</p>
-<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$HOME</code>: /shared/home/<username> your home directory</p>
-<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BUCSHOME</code>: /u/u/<username> your University <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">H</code> folder</p>
-<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code>: /burstbuffer/[a-z]/<slurm_job_id> burst buffer blob store for use during job</p>
+<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$HOME</code> = /shared/home/<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&lt;username&gt;</code>: your home directory</p>
+<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BUCSHOME</code> = /u/u/<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&lt;username&gt;</code>: your University <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">H</code> folder</p>
+<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> = /burstbuffer/[a-z]/<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&lt;slurm_job_id&gt;</code>: burst buffer blob store for use during job</p>
 
 </div>
 </div>
@@ -13193,7 +13193,7 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Storage-Costs">Storage Costs<a class="anchor-link" href="#Storage-Costs">&#182;</a></h2><p>Currently storage will not be charged, until a low cost tier three storage option is in place. At which point campaign storage will be charged, and account administrators will be able to allocate campaign storage, see usage and storage transactions in the research computing account management portal.</p>
-<p>Although we would encourage users to get into the habit of moving data around as a fundamental part of their workflow in order to optimise their own costs, and make most efficient use of the storage options available.</p>
+<p>Although, we would encourage users to get into the habit of moving data around as a fundamental part of their workflow in order to optimise their own costs, and make most efficient use of the storage options available.</p>
 
 </div>
 </div>
