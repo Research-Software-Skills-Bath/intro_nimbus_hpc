@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>06_running_jobs</title>
+<title>08_running_jobs</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13111,6 +13111,15 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Account-code">Account code<a class="anchor-link" href="#Account-code">&#182;</a></h2><p>The account code used in your run script <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --account=ACCOUNT_CODE</code> should match the resource allocation you wish to run your job against. If you don't know your resource allocation code check the research computing account managemnet portal at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">rcam.bath.ac.uk</code> (you need to be on the University's VPN All traffic), or ask your account administrator.</p>
+<h2 id="QOS">QOS<a class="anchor-link" href="#QOS">&#182;</a></h2><p>The quality of service (QOS) set in your run script with e.g. <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --qos=spot-hbv3-120</code> should match the partition name you are submitting to.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Openfoam">Openfoam<a class="anchor-link" href="#Openfoam">&#182;</a></h2><p>We will run an example job using the OpenFoam 7 module for</p>
 <p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">OpenFoam_hbv3/gcc_9.2.0/openmpi_4.1.0/v7</code></p>
 
@@ -13159,25 +13168,23 @@ module load OpenFoam_hbv3/gcc_9.2.0/openmpi_4.1.0/v7
 <span class="c1"># directory structure on scratch:</span>
 
 <span class="nv">campaigndir</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
-<span class="nv">workdir</span><span class="o">=</span><span class="nv">$SCRATCH</span>/<span class="nv">$SLURM_JOB_ID</span>
-mkdir -p <span class="nv">$workdir</span>
 
 <span class="nb">echo</span> <span class="nv">$campaigndir</span> <span class="p">|</span> <span class="k">if</span> grep -q campaign<span class="p">;</span> <span class="k">then</span> 
     <span class="c1"># Copy any inputs required to the work directory:</span>
     <span class="c1"># excluding and files with a JOB_NAME prefix, so your</span>
     <span class="c1"># output and error files don&#39;t get over written on the copy back</span>
-    rsync -aP --exclude<span class="o">=</span>JOB_NAME.* <span class="nv">$campaigndir</span>/* <span class="nv">$workdir</span>/
-    <span class="nb">cd</span> <span class="nv">$workdir</span><span class="p">;</span>
-    <span class="nb">echo</span>  <span class="s2">&quot;Work directory&quot;</span> <span class="nv">$workdir</span> <span class="p">;</span>
+    rsync -aP --exclude<span class="o">=</span>JOB_NAME.* <span class="nv">$campaigndir</span>/* <span class="nv">$BURSTBUFFER</span>
+    <span class="nb">cd</span> <span class="nv">$BURSTBUFFER</span><span class="p">;</span>
+    <span class="nb">echo</span>  <span class="s2">&quot;Work directory&quot;</span> <span class="nv">$BURSTBUFFER</span> <span class="p">;</span>
 
     <span class="c1"># source the foamDotFile and do the run</span>
     . <span class="nv">$foamDotFile</span>
     ./Allrun
 
     <span class="c1"># Copy back results.</span>
-    srun cp -Rf <span class="nv">$workdir</span>/*  <span class="nv">$campaigndir</span>/
+    srun cp -Rf <span class="nv">$BURSTBUFFER</span>/*  <span class="nv">$campaigndir</span>/
     <span class="c1">#Clean up scratch</span>
-    rm -rf <span class="nv">$workdir</span>
+    rm -rf <span class="nv">$BURSTBUFFER</span>
 <span class="k">else</span>
      <span class="nb">echo</span> <span class="s2">&quot;Not submitting from campaign. Check your submission script.&quot;</span>
      <span class="nb">exit</span> <span class="m">1</span><span class="p">;</span>
@@ -13203,161 +13210,28 @@ mkdir -p <span class="nv">$workdir</span>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="ANSYS">ANSYS<a class="anchor-link" href="#ANSYS">&#182;</a></h2><p>Below is an example script for an Ansys run, which should be submitted from the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> storage area.</p>
-<div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
-<span class="c1">#SBATCH --job-name=JOB_NAME</span>
-<span class="c1">#SBATCH --output=JOB_NAME.%j.o</span>
-<span class="c1">#SBATCH --error=JOB_NAME.%j.e</span>
-<span class="c1">#SBATCH --account=sysadmin</span>
-<span class="c1">#SBATCH --partition=spot-fsv2-32</span>
-<span class="c1">#SBATCH --qos=spot-fsv2-32</span>
-<span class="c1">#SBATCH --time=2:00:00</span>
-<span class="c1">#SBATCH --nodes=1</span>
-<span class="c1">#SBATCH --tasks-per-node=32</span>
-
-
-env <span class="p">|</span> grep SLURM <span class="p">|</span> sort -d
-<span class="nb">echo</span>
-
-<span class="nb">export</span> <span class="nv">CASE</span><span class="o">=</span><span class="s2">&quot;Free_Surf&quot;</span>
-
-<span class="c1">## Load the required modules</span>
-module load ansys/v212
-module list
-
-<span class="c1"># As an example of moving input data from /campaign</span>
-<span class="c1"># to scratch we will create and mirror the submit</span>
-<span class="c1"># directory structure on scratch:</span>
-
-<span class="nv">campaigndir</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
-<span class="nv">workdir</span><span class="o">=</span><span class="nv">$SCRATCH</span>/<span class="nv">$SLURM_JOB_ID</span>
-mkdir -p <span class="nv">$workdir</span>
-
-<span class="nb">echo</span> <span class="nv">$campaigndir</span> <span class="p">|</span> <span class="k">if</span> grep -q campaign<span class="p">;</span> <span class="k">then</span> 
-    <span class="c1"># Copy any inputs required to the work directory:</span>
-    <span class="c1"># excluding and files with a JOB_NAME prefix, so your</span>
-    <span class="c1"># output and error files don&#39;t get over written on the copy back</span>
-    rsync -aP --exclude<span class="o">=</span>JOB_NAME.* <span class="nv">$campaigndir</span>/* <span class="nv">$workdir</span>/
-    <span class="nb">echo</span>  <span class="s2">&quot;Work directory&quot;</span> <span class="nv">$workdir</span> <span class="p">;</span>
-    <span class="c1">## Define files</span>
-    <span class="nb">export</span> <span class="nv">DEFFILE</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CASE</span><span class="si">}</span><span class="s2">.def&quot;</span>
-
-    <span class="c1">## Define additional options</span>
-    <span class="nv">OPTIONS</span><span class="o">=</span><span class="s2">&quot;-double -batch&quot;</span>
-
-    <span class="nv">CFX_PARALLEL</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$CFX_BATCH_MODE</span><span class="s2"> </span><span class="nv">$CFX_CCL_FILE</span><span class="s2"> </span><span class="nv">$CFX_START_METHOD</span><span class="s2"> </span><span class="nv">$CFX_PARTITION</span><span class="s2"> </span><span class="nv">$CFX_PARTITIONER</span><span class="s2">&quot;</span>
-
-    <span class="nv">HOSTS</span><span class="o">=</span><span class="k">$(</span>srun --ntasks-per-node <span class="nv">$SLURM_CPUS_ON_NODE</span> hostname <span class="p">|</span> sort <span class="p">|</span> uniq -c <span class="p">|</span> awk <span class="s1">&#39;{print $2 &quot;*&quot; $1}&#39;</span> <span class="p">|</span> paste -sd, -<span class="k">)</span>
-    <span class="nb">echo</span> <span class="s2">&quot;HOSTS: </span><span class="nv">$HOSTS</span><span class="s2">&quot;</span>
-    <span class="nb">echo</span> <span class="s2">&quot;&quot;</span>
-
-    <span class="c1"># Run CFX5SOLVE</span>
-        cfx5solve -def Free_Surf.def <span class="si">${</span><span class="nv">OPTIONS</span><span class="si">}</span> -start-method <span class="s1">&#39;Intel MPI Distributed Parallel&#39;</span> -par-dist <span class="nv">$HOSTS</span> -partitioner <span class="si">${</span><span class="nv">CFXPARTITIONER</span><span class="si">}</span>
-
-    <span class="c1"># Copy back results.</span>
-    srun cp -Rf <span class="nv">$workdir</span>/*  <span class="nv">$campaigndir</span>/
-    <span class="c1">#Clean up scratch</span>
-    rm -rf <span class="nv">$workdir</span>
-<span class="k">else</span>
-    <span class="nb">echo</span> <span class="s2">&quot;Not submitting from campaign. Check your submission script.&quot;</span>
-    <span class="nb">exit</span> <span class="m">1</span><span class="p">;</span>
-<span class="k">fi</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Matlab">Matlab<a class="anchor-link" href="#Matlab">&#182;</a></h3><p>A hello world matlab script 'hello_world.m':</p>
-<div class="highlight"><pre><span></span><span class="nb">disp</span><span class="p">(</span><span class="s">&#39;Hello, World&#39;</span><span class="p">);</span><span class="w"></span>
-</pre></div>
-<p>An example run-script for a matlab job, which 
-can be submitted from /campaign:</p>
-<div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
-<span class="c1"># Account to charge to</span>
-<span class="c1">#SBATCH --account=prj4_phase1</span>
-<span class="c1">#Name of the job</span>
-<span class="c1">#SBATCH --job-name=JOB_NAME</span>
-<span class="c1">#SBATCH --output=JOB_NAME.%j.o</span>
-<span class="c1">#SBATCH --error=JOB_NAME.%j.e</span>
-<span class="c1"># Number of nodes requested</span>
-<span class="c1">#SBATCH --nodes=1</span>
-<span class="c1"># The no of tasks per node</span>
-<span class="c1">#SBATCH --ntasks-per-node=32</span>
-<span class="c1"># The partition to submit to</span>
-<span class="c1">#SBATCH --partition=spot-fsv2-32</span>
-<span class="c1"># The quality of service</span>
-<span class="c1">#SBATCH --qos=spot-fsv2-32</span>
-<span class="c1"># The runtime</span>
-<span class="c1">#SBATCH --time=04:00:00</span>
-
-
-<span class="c1"># Purge modules and load matlab</span>
-module purge
-module load matlab/2020b
-
-<span class="c1"># As an example of moving input data from /campaign</span>
-<span class="c1"># to scratch we will create and mirror the submit</span>
-<span class="c1"># directory structure on scratch:</span>
-
-<span class="nv">campaigndir</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
-<span class="nv">workdir</span><span class="o">=</span><span class="nv">$SCRATCH</span>/<span class="nv">$SLURM_JOB_ID</span>
-mkdir -p <span class="nv">$workdir</span>
-
-<span class="nb">echo</span> <span class="nv">$campaigndir</span> <span class="p">|</span> <span class="k">if</span> grep -q campaign<span class="p">;</span> <span class="k">then</span> 
-    <span class="c1"># Copy any inputs required to the work directory:</span>
-    <span class="c1"># excluding and files with a JOB_NAME prefix, so your</span>
-    <span class="c1"># output and error files don&#39;t get over written on the copy back</span>
-    rsync -aP --exclude<span class="o">=</span>JOB_NAME.* <span class="nv">$campaigndir</span>/* <span class="nv">$workdir</span>/
-    <span class="nb">echo</span>  <span class="s2">&quot;Work directory&quot;</span> <span class="nv">$workdir</span> <span class="p">;</span>
-    matlab -nosplash -nodisplay -r <span class="s2">&quot;hello_world; exit&quot;</span>
-
-    <span class="c1"># Copy back results.</span>
-    srun cp -Rf <span class="nv">$workdir</span>/*  <span class="nv">$campaigndir</span>/
-    <span class="c1">#Clean up scratch</span>
-    rm -rf <span class="nv">$workdir</span>
-<span class="k">else</span>
-    <span class="nb">echo</span> <span class="s2">&quot;Not submitting from campaign. Check your submission script.&quot;</span>
-    <span class="nb">exit</span> <span class="m">1</span><span class="p">;</span>
-<span class="k">fi</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Interactive-job">Interactive job<a class="anchor-link" href="#Interactive-job">&#182;</a></h3><p>It is also possible to obtain a compute node and work interactively.</p>
 <p>Issuing the following command in the terminal will request a spot-hbv3-120 compute instance for 6 hours:</p>
 
-<pre><code style="">srun --partition spot-hbv3-120 --nodes 1  --account prj4_phase1  --qos prj4_phase1 --job-name "interactive" --cpus-per-task 120 --time 6:00:00 --pty bash</code></pre>
+<pre><code style="">srun --partition spot-hbv3-120 --nodes 1  --account prj4_phase1  --qos spot-hbv3-120 --job-name "interactive" --cpus-per-task 120 --time 6:00:00 --pty bash</code></pre>
 
 </div>
 </div>
 </div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 
-    </div>
 </div>
 </div>
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="w3-bar w3-blue-grey">
-<a href="./05_software.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
+<a href="./07_openondemand.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
 <a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
-<a href="./07_openondemand.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
+<a href="./00_schedule.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
 </div>
 </div>
 </div>

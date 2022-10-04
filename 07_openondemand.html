@@ -13107,19 +13107,7 @@ div#notebook {
 <li><strong>Teaching:</strong> 10 min</li>
 <li><strong>Exercises:</strong> 5 min</li>
 </ul>
-<p><strong>Questions</strong></p>
-<ul>
-<li>How do I access software?</li>
-<li>What libraries are available?</li>
-<li>How can I access different applications?</li>
-<li>What tools are there to help me?</li>
-<li>What application should I choose on each instance?</li>
-</ul>
-<p><strong>Objectives</strong></p>
-<ul>
-<li>Know that software on Janus is managed with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">module</code> and understand how to use it</li>
-<li>Know that software is collected into groups on different instances</li>
-</ul>
+<h2 id="Questions"><strong>Questions</strong><a class="anchor-link" href="#Questions">&#182;</a></h2>
 </div>
 </div>
 </div>
@@ -13127,83 +13115,6 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="module"><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">module</code><a class="anchor-link" href="#module">&#182;</a></h2><p>On Janus <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">module</code> is used to manage different libraries and pieces of software.  Unlike you own machine where you likely have one set of up packages each running with the latest versions on Janus there are many different applications each with different versions and libraries that they rely on.  Tools like module ensure researchers can access the versions of applications and libraries they want and allow the service to be managed more easily.  It also means that the correct dependencies, typically libraries that are used to compile applications can be loaded automatically making life easier for users.</p>
-<p>You can check what modules are loaded when you first log-in to Janus:</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span>module list
-</pre></div>
-<p><img src="./images/module_list.png" alt="storage"></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>You can also run this command at any time to check which modules you have loaded or removed.
-By default only <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">gcc-9.2.0</code>, <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">mpi/openmpi</code>, <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">mkl/mkl-2021.1</code> are loaded.
-gcc provides the standard serial gnu compiler suite, openmpi is the contains the openmMPI MPI implementation with parallel mpi libraries and compiler wrappers and mkl is Intel's Math Kernel Library.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>You can see what modules are available with</p>
-<div class="highlight"><pre><span></span>module avail
-</pre></div>
-<p><img src="./images/module_avail.png" alt="storage"></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>The software modules will be updated as we build, test and broaden the software stack. Different modules are available depending on the instance type you wish to use. A combined list of all available modules built on the system is presented on the log-in node.</p>
-<p>Any module in</p>
-<table>
-<thead><tr>
-<th>File path</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>/usr/share/Modules/modulefiles</td>
-</tr>
-<tr>
-<td>/apps/x86_64/modules/all</td>
-</tr>
-<tr>
-<td>/apps/modulefiles</td>
-</tr>
-</tbody>
-</table>
-<p>are available and can be used on all instances.</p>
-<p>However the modules in</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/apps/modules/</code></p>
-<p>are seperated out by build toolchain and are built for a specific instance. You can check if these modules are available on the instance of your choice with the following command:</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">module check [instance_type] [module_name]</code></p>
-<p>where <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[instance_type]</code> and <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[module_name]</code> are the instance name and module you wish to check, e.g.:</p>
-
-<pre><code style="">$ module check fsv2 OpenFOAM
- The following potential matches are available on the fsv2 instance:
- match: OpenFOAM/v1812-foss-2020a
- match: OpenFOAM/v2012-foss-2020a
- match: OpenFOAM/9-foss-2021a
- To load one of them include: `module load [module name]` in your run script e.g.:
- module load OpenFOAM/v1812-foss-2020a</code></pre>
-<p>The <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[module_name]</code> you pass to this comand doesn't have to be exact (but the closer the argument you pass to the command is to the actual module name the better), and it will present you with a list of potential matches for the instance you are interested in. These modules cannot be loaded and used on the login-node, and rather should be included in your run-script e.g.:</p>
-
-<pre><code style="">module purge
-module load OpenFOAM/v1812-foss-2020a</code></pre>
 
 </div>
 </div>
@@ -13212,9 +13123,9 @@ module load OpenFOAM/v1812-foss-2020a</code></pre>
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="w3-bar w3-blue-grey">
-<a href="./06_running_jobs.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
+<a href="./06_infrastructure.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
 <a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
-<a href="./00_schedule.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
+<a href="./08_running_jobs.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
 </div>
 </div>
 </div>
