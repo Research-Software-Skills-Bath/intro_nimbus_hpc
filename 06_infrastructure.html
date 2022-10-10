@@ -13125,7 +13125,7 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Nimbus-Infrastructure">Nimbus Infrastructure<a class="anchor-link" href="#Nimbus-Infrastructure">&#182;</a></h2><p>The underlying infrastructure for the Nimbus system can be seen below:</p>
-<p><img src="./images/infrastructure.png" alt="infrastrcture"></p>
+<p><img src="./images/Infrastructure.png" alt="infrastrcture"></p>
 <p>Services offered in the cloud can change rapidly, an Nimbus has been designed with this in mind. We use <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">blue-green</code> deployment, in order to allow rolling updates of the system with continuity of service. In essence there are two clusters, one <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> and one <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">inactive</code>.  In order to ensure high availablity and increase resilience, on each cluster there are two login-nodes, and two schedulers.</p>
 <p>As a user most of this will be unnoticable. The you will automatically be put onto one of the login nodes on the <em>active cluster</em> when you log onto the system.</p>
 <p>The only time you may have to take action as a result of this infrastructure is if the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> cluster is <em>switched</em>. In which case you will get a message to the terminal informing you about the upcoming switch, and you will have to log out and back in in order to continue your work. Your jobs will continue to run, and you will not have to resubmit them.</p>
