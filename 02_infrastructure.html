@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>04_storage-soln</title>
+<title>02_infrastructure</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13093,20 +13093,68 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Solutions">Solutions<a class="anchor-link" href="#Solutions">&#182;</a></h1>
+<h1 id="Infrastructure">Infrastructure<a class="anchor-link" href="#Infrastructure">&#182;</a></h1><p>A brief overview of the Nimbus Infrastructure</p>
+
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
-    <h3 id="-Go-home%20"><i class="fa fa-eye"></i> Go home
+<div class="w3-panel w3-leftbar w3-border-green w3-pale-green w3-padding-small">
+    <h3 id="-Overview%3A%20"><i class="fa fa-file-o"></i> Overview:
 </h3>
-    <p>We can use the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$HOME</code> variable in exactly the same way as we used <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$SCRATCH</code>:</p>
-<div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="nv">$HOME</span>
-<span class="nb">pwd</span>
-</pre></div>
+    <ul>
+<li><strong>Teaching:</strong> 10 min</li>
+<li><strong>Exercises:</strong> 0 min</li>
+</ul>
+<p><strong>Questions</strong></p>
+<ul>
+<li>What does the underlying infrastructure for Nimbus look like?</li>
+</ul>
+<p><strong>Objectives</strong></p>
+<ul>
+<li>Know that the Nimbus has effectively has two clusters, in order to allow for continuous development of the system. </li>
+<li>KNow that when the reseacrh computing team switch from <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">blue</code> to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">green</code> you will need to log out and log back in.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Nimbus-Infrastructure">Nimbus Infrastructure<a class="anchor-link" href="#Nimbus-Infrastructure">&#182;</a></h2><p>The underlying infrastructure for the Nimbus system can be seen below:</p>
+<p><img src="./images/Infrastructure.png" alt="infrastrcture"></p>
+<p>Services offered in the cloud can change rapidly, an Nimbus has been designed with this in mind. We use <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">blue-green</code> deployment, in order to allow rolling updates of the system with continuity of service. In essence there are two clusters, one <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> and one <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">inactive</code>.  In order to ensure high availablity and increase resilience, on each cluster there are two login-nodes, and two schedulers.</p>
+<p>As a user most of this will be unnoticable. The you will automatically be put onto one of the login nodes on the <em>active cluster</em> when you log onto the system.</p>
+<p>The only time you may have to take action as a result of this infrastructure is if the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> cluster is <em>switched</em>. In which case you will get a message to the terminal informing you about the upcoming switch, and you will have to log out and back in in order to continue your work. Your jobs will continue to run, and you will not have to resubmit them.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="w3-panel w3-leftbar w3-border-green w3-pale-green w3-padding-small">
+    <h3 id="-Key-Points%3A%20"><i class="fa fa-key"></i> Key Points:
+</h3>
+    <ul>
+<li>There are two different clusters on the Nimbus system.</li>
+<li>You will automcatically be put on the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> cluster when you log in.</li>
+<li>If we switch <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> clusters in order to update the system you will have to log out and back in.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="w3-bar w3-blue-grey">
+<a href="./01_access_cloud.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
+<a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
+<a href="./03_compute_instances.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
 </div>
 </div>
 </div>

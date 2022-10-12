@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>04_storage</title>
+<title>04_slurm</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13093,7 +13093,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Storage">Storage<a class="anchor-link" href="#Storage">&#182;</a></h1>
+<h1 id="Slurm">Slurm<a class="anchor-link" href="#Slurm">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13105,19 +13105,23 @@ div#notebook {
 </h3>
     <ul>
 <li><strong>Teaching:</strong> 10 min</li>
-<li><strong>Exercises:</strong> 2 min</li>
+<li><strong>Exercises:</strong> 0 min</li>
 </ul>
 <p><strong>Questions</strong></p>
 <ul>
-<li>What storage is available on Nimbus?</li>
-<li>How does this affect my workflow?</li>
-<li>Where should I keep my data?</li>
+<li>What is a scheduler</li>
+<li>How can I use <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> to manage and run my jobs</li>
+<li>What <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> commands can I use to explore the system</li>
 </ul>
 <p><strong>Objectives</strong></p>
 <ul>
-<li>Understand the storage structure of the new system.</li>
-<li>Know where to keep your data, and how to stage data for runs.</li>
-<li>Understand the costs associated with storage.</li>
+<li>Know that the scheduler manages jobs on the service</li>
+<li>Know how to interact with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> to:<ul>
+<li>see what jobs are running</li>
+<li>cancel jobs </li>
+<li>find out information about my jobs</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -13126,27 +13130,9 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Filesystem-on-Nimbus">Filesystem on Nimbus<a class="anchor-link" href="#Filesystem-on-Nimbus">&#182;</a></h2><p>The filesystem on Nimbus, the University of Bath's Cloud HPC facility, has the following layout:</p>
-<p><img src="./images/storage.png" alt="storage"></p>
-<p>The areas of the filesystem you should know about are:</p>
-<ul>
-<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/shared/home</code>: 2TB Azure Managed Disk. Each user is given a home folder, with a strict quota of 5GB. You can check your quota usage with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">quota -s</code>. This area can be accessed from both the login and compute nodes. This disk is backed up daily, and could be used for storing e.g.:</p>
-<ul>
-<li>Code/scripts for your calculations</li>
-<li>Template jobscripts</li>
-</ul>
-</li>
-<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code>: each resource allocation has an associated campaign storage area located at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/&lt;resource_allocation_id&gt;</code>. The quota for this disk space is set to 50GB for each account (account admins can allocate this to each Resource Allocation in the research computing account management portal). <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">campaign</code> is where you would keep files required for a current project thrust. This is not designed for long-term archival storage, and data should regularly be moved out of this area. Campaign storage is a resizable logical file system based on logical volume management (LVM). The file systems are created in multiple managed disks. Initially we have one 16TB disk, which can be increased to 64TB, with the ability to add more disks.</p>
-</li>
-<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/apps/</code>: 1TB Azure managed Disk. This space contains centrally compiled software for use of users.</p>
-</li>
-<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/u/</code>: The University <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">H</code> drive is mounted and can be accessed from the login nodes only.</p>
-</li>
-<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code>: Some compute instances have fast local storage located in this area, only accessible from the compute node. e.g. HBv3 (450GB), HBv2(450GB), HB(450GB), HC44(650GB)</p>
-</li>
-<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/burstbuffer/*/</code>: when running a job on a compute node you can access one of 26 blob stores in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/burstbuffer/*/</code>. An environment variable <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> is made available in the environment when running a job, and the job specific burstbuffer gets destroyed at the end of the job. You can use this space to store temporary files that are needed during a job run, bu not afterwards. e.g. by staging your input data in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code>, running your job there, and then only copying the outputs you require back to either <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign</code> or <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/home/</code>. The blob performance is 60 GBps shared by jobs running on each blob store (allocated in a round robin fashion).</p>
-</li>
-</ul>
+<h2 id="Scheduler">Scheduler<a class="anchor-link" href="#Scheduler">&#182;</a></h2><p>Similarly to Balena, Nimbus the cloud HPC service uses a scheduler to manage how jobs are run and resources are allocated.</p>
+<p>If multiple jobs ran on a single node at the same time users would be competing for the same resources and jobs take longer to run overall. A scheduler manages individual jobs, which are allocated to the resources they need as they become available. This results in a higher overall throughput and more consistent performance.</p>
+<p>The scheduler used by Nimbus is the same as that used by it's predecessor Balena, <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code>: _<strong>S</strong><em>imple </em><strong>L</strong><em>inux </em><strong>U</strong><em>tility for </em><strong>R</strong><em>esource </em><strong>M</strong>_anagment.</p>
 
 </div>
 </div>
@@ -13154,46 +13140,61 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Environment-Variables">Environment Variables<a class="anchor-link" href="#Environment-Variables">&#182;</a></h3><p>There are several environment variables to help you navigate the filesystem.</p>
-<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$HOME</code> = /shared/home/<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&lt;username&gt;</code>: your home directory</p>
-<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BUCSHOME</code> = /u/u/<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&lt;username&gt;</code>: your University <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">H</code> folder</p>
-<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> = /burstbuffer/[a-z]/<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&lt;slurm_job_id&gt;</code>: burst buffer blob store for use during job</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="w3-panel w3-leftbar w3-border-yellow w3-pale-yellow w3-padding-small">
-    <h3 id="-Try-these-commands%20"><i class="fa fa-pencil-square-o"></i> Try these commands
-</h3>
-    <div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="nv">$HOME</span>
-<span class="nb">echo</span> <span class="nv">$BUCSHOME</span>
-<span class="nb">cd</span> <span class="nv">$BUCSHOME</span>
-<span class="nb">pwd</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="w3-panel w3-leftbar w3-border-yellow w3-pale-yellow w3-padding-small">
-    <h3 id="-Go-home%20"><i class="fa fa-pencil-square-o"></i> Go home
-</h3>
-    <p>How can we use the environment variables we've used above to return to our <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">home</code> directory?</p>
-<p><a href="./04_storage-soln.html#-Go-home%20">Solution</a></p>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Storage-Costs">Storage Costs<a class="anchor-link" href="#Storage-Costs">&#182;</a></h2><p>Currently storage will not be charged, until a low cost tier three storage option is in place. At which point campaign storage will be charged, and account administrators will be able to allocate campaign storage, see usage and storage transactions in the research computing account management portal.</p>
-<p>Although, we would encourage users to get into the habit of moving data around as a fundamental part of their workflow in order to optimise their own costs, and make most efficient use of the storage options available.</p>
+<h3 id="Slurm:-Simple-Linux-Utility-for-Resource-Managment">Slurm: Simple Linux Utility for Resource Managment<a class="anchor-link" href="#Slurm:-Simple-Linux-Utility-for-Resource-Managment">&#182;</a></h3><p>INteracting with the sceduler is done through the terminal using an array of commands.</p>
+<p>Below are a number of key <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> commands:</p>
+<table>
+<thead><tr>
+<th>Slurm command</th>
+<th>Function</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sinfo</code></td>
+<td>View information about SLURM nodes and partitions</td>
+</tr>
+<tr>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">squeue</code></td>
+<td>List status of jobs in the <strong>queue</strong></td>
+</tr>
+<tr>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">squeue --user [userid]</code></td>
+<td>Jobs by user</td>
+</tr>
+<tr>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">squeue --job [jobid]</code></td>
+<td>Jobs by jobid</td>
+</tr>
+<tr>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sbatch [jobscript]</code></td>
+<td>Submit a jobscript to the scheduler</td>
+</tr>
+<tr>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scancel [jobid]</code></td>
+<td>Cancel a job in the queue</td>
+</tr>
+<tr>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol hold [jobid]</code></td>
+<td>Hold a job in the queue</td>
+</tr>
+<tr>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol release [jobid]</code></td>
+<td>Release a held job</td>
+</tr>
+<tr>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol show job [jobid]</code></td>
+<td>View information about a job</td>
+</tr>
+<tr>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol show node nodename</code></td>
+<td>Get information of a node</td>
+</tr>
+<tr>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol show license</code></td>
+<td>Get licenses available on SLURM</td>
+</tr>
+</tbody>
+</table>
 
 </div>
 </div>
@@ -13205,13 +13206,17 @@ div#notebook {
     <h3 id="-Key-Points%3A%20"><i class="fa fa-key"></i> Key Points:
 </h3>
     <ul>
-<li>There are different storage areas on the Nimbus system.</li>
-<li><strong>Only</strong> your <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/home/</code> area is backed up.</li>
-<li>Data required for your current project workflow should be kept in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code>.</li>
-<li>Data should not be stored on <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> is an environment variable pointing to temporary storage that can be used throughout the duration of your job. </li>
-<li>You can use environment variables to navigate the filesystem.</li>
-<li>Storage is currently not being charged, but will be in the future, so getting into good habits with respect to data management (and encouraging others to do the same) is certainly a good idea.</li>
+<li>We use a scheduler to manage jobs on the cloud HPC service</li>
+<li>Janus uses the slurm scheduler</li>
+<li>Key commands are:<ul>
+<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sbatch</code> to submit jobs</li>
+<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sinfo</code> to view information about the service</li>
+<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">squeue</code> to view the queue</li>
+<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scancel</code> to delete a job</li>
 </ul>
+</li>
+</ul>
+<p>You can find further information about slurm and the commands here: <a href="http://slurm.schedmd.com/">http://slurm.schedmd.com/</a></p>
 </div>
 </div>
 </div>

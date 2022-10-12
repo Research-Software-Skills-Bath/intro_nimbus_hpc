@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>06_infrastructure</title>
+<title>06_storage</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13093,8 +13093,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Infrastructure">Infrastructure<a class="anchor-link" href="#Infrastructure">&#182;</a></h1><p>A brief overview of the Nimbus Infrastructure</p>
-
+<h1 id="Storage">Storage<a class="anchor-link" href="#Storage">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13106,16 +13105,19 @@ div#notebook {
 </h3>
     <ul>
 <li><strong>Teaching:</strong> 10 min</li>
-<li><strong>Exercises:</strong> 0 min</li>
+<li><strong>Exercises:</strong> 2 min</li>
 </ul>
 <p><strong>Questions</strong></p>
 <ul>
-<li>What does the underlying infrastructure for Nimbus look like?</li>
+<li>What storage is available on Nimbus?</li>
+<li>How does this affect my workflow?</li>
+<li>Where should I keep my data?</li>
 </ul>
 <p><strong>Objectives</strong></p>
 <ul>
-<li>Know that the Nimbus has effectively has two clusters, in order to allow for continuous development of the system. </li>
-<li>KNow that when the reseacrh computing team switch from <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">blue</code> to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">green</code> you will need to log out and log back in.</li>
+<li>Understand the storage structure of the new system.</li>
+<li>Know where to keep your data, and how to stage data for runs.</li>
+<li>Understand the costs associated with storage.</li>
 </ul>
 </div>
 </div>
@@ -13124,11 +13126,74 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Nimbus-Infrastructure">Nimbus Infrastructure<a class="anchor-link" href="#Nimbus-Infrastructure">&#182;</a></h2><p>The underlying infrastructure for the Nimbus system can be seen below:</p>
-<p><img src="./images/Infrastructure.png" alt="infrastrcture"></p>
-<p>Services offered in the cloud can change rapidly, an Nimbus has been designed with this in mind. We use <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">blue-green</code> deployment, in order to allow rolling updates of the system with continuity of service. In essence there are two clusters, one <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> and one <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">inactive</code>.  In order to ensure high availablity and increase resilience, on each cluster there are two login-nodes, and two schedulers.</p>
-<p>As a user most of this will be unnoticable. The you will automatically be put onto one of the login nodes on the <em>active cluster</em> when you log onto the system.</p>
-<p>The only time you may have to take action as a result of this infrastructure is if the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> cluster is <em>switched</em>. In which case you will get a message to the terminal informing you about the upcoming switch, and you will have to log out and back in in order to continue your work. Your jobs will continue to run, and you will not have to resubmit them.</p>
+<h2 id="Filesystem-on-Nimbus">Filesystem on Nimbus<a class="anchor-link" href="#Filesystem-on-Nimbus">&#182;</a></h2><p>The filesystem on Nimbus, the University of Bath's Cloud HPC facility, has the following layout:</p>
+<p><img src="./images/storage.png" alt="storage"></p>
+<p>The areas of the filesystem you should know about are:</p>
+<ul>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/shared/home</code>: 2TB Azure Managed Disk. Each user is given a home folder, with a strict quota of 5GB. You can check your quota usage with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">quota -s</code>. This area can be accessed from both the login and compute nodes. This disk is backed up daily, and could be used for storing e.g.:</p>
+<ul>
+<li>Code/scripts for your calculations</li>
+<li>Template jobscripts</li>
+</ul>
+</li>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code>: each resource allocation has an associated campaign storage area located at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/&lt;resource_allocation_id&gt;</code>. The quota for this disk space is set to 50GB for each account (account admins can allocate this to each Resource Allocation in the research computing account management portal). <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">campaign</code> is where you would keep files required for a current project thrust. This is not designed for long-term archival storage, and data should regularly be moved out of this area. Campaign storage is a resizable logical file system based on logical volume management (LVM). The file systems are created in multiple managed disks. Initially we have one 16TB disk, which can be increased to 64TB, with the ability to add more disks.</p>
+</li>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/apps/</code>: 1TB Azure managed Disk. This space contains centrally compiled software for use of users.</p>
+</li>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/u/</code>: The University <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">H</code> drive is mounted and can be accessed from the login nodes only.</p>
+</li>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code>: Some compute instances have fast local storage located in this area, only accessible from the compute node. e.g. HBv3 (450GB), HBv2(450GB), HB(450GB), HC44(650GB)</p>
+</li>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/burstbuffer/*/</code>: when running a job on a compute node you can access one of 26 blob stores in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/burstbuffer/*/</code>. An environment variable <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> is made available in the environment when running a job, and the job specific burstbuffer gets destroyed at the end of the job. You can use this space to store temporary files that are needed during a job run, bu not afterwards. e.g. by staging your input data in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code>, running your job there, and then only copying the outputs you require back to either <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign</code> or <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/home/</code>. The blob performance is 60 GBps shared by jobs running on each blob store (allocated in a round robin fashion).</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Environment-Variables">Environment Variables<a class="anchor-link" href="#Environment-Variables">&#182;</a></h3><p>There are several environment variables to help you navigate the filesystem.</p>
+<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$HOME</code> = /shared/home/<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&lt;username&gt;</code>: your home directory</p>
+<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BUCSHOME</code> = /u/u/<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&lt;username&gt;</code>: your University <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">H</code> folder</p>
+<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> = /burstbuffer/[a-z]/<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&lt;slurm_job_id&gt;</code>: burst buffer blob store for use during job</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="w3-panel w3-leftbar w3-border-yellow w3-pale-yellow w3-padding-small">
+    <h3 id="-Try-these-commands%20"><i class="fa fa-pencil-square-o"></i> Try these commands
+</h3>
+    <div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="nv">$HOME</span>
+<span class="nb">echo</span> <span class="nv">$BUCSHOME</span>
+<span class="nb">cd</span> <span class="nv">$BUCSHOME</span>
+<span class="nb">pwd</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="w3-panel w3-leftbar w3-border-yellow w3-pale-yellow w3-padding-small">
+    <h3 id="-Go-home%20"><i class="fa fa-pencil-square-o"></i> Go home
+</h3>
+    <p>How can we use the environment variables we've used above to return to our <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">home</code> directory?</p>
+<p><a href="./06_storage-soln.html#-Go-home%20">Solution</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Storage-Costs">Storage Costs<a class="anchor-link" href="#Storage-Costs">&#182;</a></h2><p>Currently storage will not be charged, until a low cost tier three storage option is in place. At which point campaign storage will be charged, and account administrators will be able to allocate campaign storage, see usage and storage transactions in the research computing account management portal.</p>
+<p>Although, we would encourage users to get into the habit of moving data around as a fundamental part of their workflow in order to optimise their own costs, and make most efficient use of the storage options available.</p>
 
 </div>
 </div>
@@ -13140,9 +13205,12 @@ div#notebook {
     <h3 id="-Key-Points%3A%20"><i class="fa fa-key"></i> Key Points:
 </h3>
     <ul>
-<li>There are two different clusters on the Nimbus system.</li>
-<li>You will automcatically be put on the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> cluster when you log in.</li>
-<li>If we switch <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> clusters in order to update the system you will have to log out and back in.</li>
+<li>There are different storage areas on the Nimbus system.</li>
+<li><strong>Only</strong> your <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/home/</code> area is backed up.</li>
+<li>Data required for your current project workflow should be kept in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code>.</li>
+<li>Data should not be stored on <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> is an environment variable pointing to temporary storage that can be used throughout the duration of your job. </li>
+<li>You can use environment variables to navigate the filesystem.</li>
+<li>Storage is currently not being charged, but will be in the future, so getting into good habits with respect to data management (and encouraging others to do the same) is certainly a good idea.</li>
 </ul>
 </div>
 </div>
