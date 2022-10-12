@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>08_running_jobs</title>
+<title>09_openondemand</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13093,128 +13093,22 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Running-a-job">Running a job<a class="anchor-link" href="#Running-a-job">&#182;</a></h1>
+<h1 id="Open-On-Demand">Open On Demand<a class="anchor-link" href="#Open-On-Demand">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Below are example submission scripts for several different codes.</p>
-<p>These examples copy the run data from the submission directory in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> area to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> before the run, and copy any files back to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> afterwards. The script then cleans up by removing the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">working_directory</code> in the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> area (this will be done automatically, but is perhaps a good habit to get into for furture developments in terms of storage were this may not be the case).</p>
-<p>Obviously there are an infinite number of ways to structure the logic in your submission scripts in order to handle the data transfer between <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> and <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code>.</p>
-<p>The following examples can be adapted to your own needs. They should be submitted from the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> storage area, they will create a temporary working directory in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER/$SLURM_JOB_ID</code> and copy the contents of the submission folder over to the working directory. After the run it copies the contents of the working directory in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER/SLURM_JOB_ID</code> back to the submission directory in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code>. It then cleans up the working directory.</p>
-
+<div class="w3-panel w3-leftbar w3-border-green w3-pale-green w3-padding-small">
+    <h3 id="-Overview%3A%20"><i class="fa fa-file-o"></i> Overview:
+</h3>
+    <ul>
+<li><strong>Teaching:</strong> 10 min</li>
+<li><strong>Exercises:</strong> 5 min</li>
+</ul>
+<h2 id="Questions"><strong>Questions</strong><a class="anchor-link" href="#Questions">&#182;</a></h2>
 </div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Account-code">Account code<a class="anchor-link" href="#Account-code">&#182;</a></h2><p>The account code used in your run script <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --account=ACCOUNT_CODE</code> should match the resource allocation you wish to run your job against. If you don't know your resource allocation code check the research computing account managemnet portal at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">rcam.bath.ac.uk</code> (you need to be on the University's VPN All traffic), or ask your account administrator.</p>
-<h2 id="QOS">QOS<a class="anchor-link" href="#QOS">&#182;</a></h2><p>The quality of service (QOS) set in your run script with e.g. <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --qos=spot-hbv3-120</code> should match the partition name you are submitting to.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Openfoam">Openfoam<a class="anchor-link" href="#Openfoam">&#182;</a></h2><p>We will run an example job using the OpenFoam 7 module for</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">OpenFoam_hbv3/gcc_9.2.0/openmpi_4.1.0/v7</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's load the module:</p>
-<div class="highlight"><pre><span></span>module load OpenFoam_hbv3/gcc_9.2.0/openmpi_4.1.0/v7
-</pre></div>
-<p>Source the OpenFoam bashrc:</p>
-<div class="highlight"><pre><span></span><span class="nb">source</span> <span class="nv">$foamDotFile</span>
-</pre></div>
-<p>Lets switch to our scratch space:</p>
-<div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="nv">$SCRATCH</span>
-</pre></div>
-<p>And copy over the run files:</p>
-<div class="highlight"><pre><span></span>cp -r <span class="nv">$WM_PROJECT_DIR</span>/tutorials/multiphase/interFoam/laminar/damBreak ./
-</pre></div>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>An example run script:</p>
-<div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
-<span class="c1">#SBATCH --account=prj3_phase1</span>
-<span class="c1">#SBATCH --job-name=JOB_NAME</span>
-<span class="c1">#SBATCH --output=JOB_NAME.%j.o</span>
-<span class="c1">#SBATCH --error=JOB_NAME.%j.e</span>
-<span class="c1">#SBATCH --nodes=1</span>
-<span class="c1">#SBATCH --ntasks-per-node=120</span>
-<span class="c1">#SBATCH --partition=spot-hbv3-120</span>
-<span class="c1">#SBATCH --qos=spot-hbv3-120</span>
-<span class="c1">#SBATCH --time=04:00:00</span>
-
-module purge
-module load OpenFoam_hbv3/gcc_9.2.0/openmpi_4.1.0/v7
-
-<span class="c1"># As an example of moving input data from /campaign</span>
-<span class="c1"># to scratch we will create and mirror the submit</span>
-<span class="c1"># directory structure on scratch:</span>
-
-<span class="nv">campaigndir</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
-
-<span class="nb">echo</span> <span class="nv">$campaigndir</span> <span class="p">|</span> <span class="k">if</span> grep -q campaign<span class="p">;</span> <span class="k">then</span> 
-    <span class="c1"># Copy any inputs required to the work directory:</span>
-    <span class="c1"># excluding and files with a JOB_NAME prefix, so your</span>
-    <span class="c1"># output and error files don&#39;t get over written on the copy back</span>
-    rsync -aP --exclude<span class="o">=</span>JOB_NAME.* <span class="nv">$campaigndir</span>/* <span class="nv">$BURSTBUFFER</span>
-    <span class="nb">cd</span> <span class="nv">$BURSTBUFFER</span><span class="p">;</span>
-    <span class="nb">echo</span>  <span class="s2">&quot;Work directory&quot;</span> <span class="nv">$BURSTBUFFER</span> <span class="p">;</span>
-
-    <span class="c1"># source the foamDotFile and do the run</span>
-    . <span class="nv">$foamDotFile</span>
-    ./Allrun
-
-    <span class="c1"># Copy back results.</span>
-    srun cp -Rf <span class="nv">$BURSTBUFFER</span>/*  <span class="nv">$campaigndir</span>/
-    <span class="c1">#Clean up scratch</span>
-    rm -rf <span class="nv">$BURSTBUFFER</span>
-<span class="k">else</span>
-     <span class="nb">echo</span> <span class="s2">&quot;Not submitting from campaign. Check your submission script.&quot;</span>
-     <span class="nb">exit</span> <span class="m">1</span><span class="p">;</span>
-<span class="k">fi</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Lets switch into the folder</p>
-<div class="highlight"><pre><span></span><span class="nb">cd</span> damBreak
-</pre></div>
-<p>And after copying the above runscript into <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">run_job.slm</code> lets submit the job:</p>
-<div class="highlight"><pre><span></span>sbatch run_job.slm
-</pre></div>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Interactive-job">Interactive job<a class="anchor-link" href="#Interactive-job">&#182;</a></h3><p>It is also possible to obtain a compute node and work interactively.</p>
-<p>Issuing the following command in the terminal will request a spot-hbv3-120 compute instance for 6 hours:</p>
-
-<pre><code style="">srun --partition spot-hbv3-120 --nodes 1  --account prj4_phase1  --qos spot-hbv3-120 --job-name "interactive" --cpus-per-task 120 --time 6:00:00 --pty bash</code></pre>
-
 </div>
 </div>
 </div>
@@ -13229,7 +13123,7 @@ module load OpenFoam_hbv3/gcc_9.2.0/openmpi_4.1.0/v7
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="w3-bar w3-blue-grey">
-<a href="./07_openondemand.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
+<a href="./07_running_jobs.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
 <a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
 <a href="./00_schedule.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
 </div>
