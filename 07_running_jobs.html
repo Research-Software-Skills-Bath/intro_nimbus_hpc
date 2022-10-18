@@ -13120,8 +13120,8 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Openfoam">Openfoam<a class="anchor-link" href="#Openfoam">&#182;</a></h2><p>We will run an example job using the OpenFoam 7 module for</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">OpenFoam_hbv3/gcc_9.2.0/openmpi_4.1.0/v7</code></p>
+<h2 id="Openfoam">Openfoam<a class="anchor-link" href="#Openfoam">&#182;</a></h2><p>We will run an example job using the OpenFoam module for the hbv3-120 instance</p>
+<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">OpenFOAM/v2012-foss-2020a</code></p>
 
 </div>
 </div>
@@ -13129,26 +13129,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's load the module:</p>
-<div class="highlight"><pre><span></span>module load OpenFoam_hbv3/gcc_9.2.0/openmpi_4.1.0/v7
-</pre></div>
-<p>Source the OpenFoam bashrc:</p>
-<div class="highlight"><pre><span></span><span class="nb">source</span> <span class="nv">$foamDotFile</span>
-</pre></div>
-<p>Lets switch to our burstbuffer space:</p>
-<div class="highlight"><pre><span></span><span class="nb">cd</span> <span class="nv">$BURSTBUFFER</span>
-</pre></div>
-<p>And copy over the run files:</p>
-<div class="highlight"><pre><span></span>cp -r <span class="nv">$WM_PROJECT_DIR</span>/tutorials/multiphase/interFoam/laminar/damBreak ./
-</pre></div>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>An example run script:</p>
+<p>An example run script - create a file named <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">run_job.slm</code> with the following contents (remembering to replace the account code with that of your resource allocation):</p>
 <div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 <span class="c1">#SBATCH --account=prj3_phase1</span>
 <span class="c1">#SBATCH --job-name=JOB_NAME</span>
@@ -13160,30 +13141,37 @@ div#notebook {
 <span class="c1">#SBATCH --qos=spot-hbv3-120</span>
 <span class="c1">#SBATCH --time=04:00:00</span>
 
-module purge
-module load OpenFoam_hbv3/gcc_9.2.0/openmpi_4.1.0/v7
 
-<span class="c1"># As an example of moving input data from /campaign</span>
-<span class="c1"># to scratch we will create and mirror the submit</span>
-<span class="c1"># directory structure on scratch:</span>
+<span class="c1"># Load the openFOAM module </span>
+module purge
+module load OpenFOAM/v2012-foss-2020a
+
+<span class="c1"># as en example we will copy the dambreak tutorial to our current</span>
+<span class="c1"># directory</span>
+cp -r <span class="nv">$WM_PROJECT_DIR</span>/tutorials/multiphase/interFoam/laminar/damBreak ./
+<span class="nb">cd</span> damBreak
+
+<span class="c1"># set campaigndir as our current working directory for copy back</span>
 
 <span class="nv">campaigndir</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
 
+<span class="c1"># Check we are submitting from campaign </span>
 <span class="nb">echo</span> <span class="nv">$campaigndir</span> <span class="p">|</span> <span class="k">if</span> grep -q campaign<span class="p">;</span> <span class="k">then</span> 
     <span class="c1"># Copy any inputs required to the work directory:</span>
-    <span class="c1"># excluding and files with a JOB_NAME prefix, so your</span>
+    <span class="c1"># excluding and files with a &lt;JOB_NAME&gt; (whatever your job name actualy is...) prefix, so your</span>
     <span class="c1"># output and error files don&#39;t get over written on the copy back</span>
     rsync -aP --exclude<span class="o">=</span>JOB_NAME.* <span class="nv">$campaigndir</span>/* <span class="nv">$BURSTBUFFER</span>
+
     <span class="nb">cd</span> <span class="nv">$BURSTBUFFER</span><span class="p">;</span>
     <span class="nb">echo</span>  <span class="s2">&quot;Work directory&quot;</span> <span class="nv">$BURSTBUFFER</span> <span class="p">;</span>
 
     <span class="c1"># source the foamDotFile and do the run</span>
-    . <span class="nv">$foamDotFile</span>
+    <span class="nb">source</span> <span class="nv">$WM_PROJECT_DIR</span>/etc/bashrc
     ./Allrun
 
-    <span class="c1"># Copy back results.</span>
+    <span class="c1"># Copy back any results you need to campaign.</span>
     srun cp -Rf <span class="nv">$BURSTBUFFER</span>/*  <span class="nv">$campaigndir</span>/
-    <span class="c1">#Clean up scratch</span>
+    <span class="c1">#Clean up burstbuffer</span>
     rm -rf <span class="nv">$BURSTBUFFER</span>
 <span class="k">else</span>
      <span class="nb">echo</span> <span class="s2">&quot;Not submitting from campaign. Check your submission script.&quot;</span>
@@ -13197,10 +13185,7 @@ module load OpenFoam_hbv3/gcc_9.2.0/openmpi_4.1.0/v7
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Lets switch into the folder</p>
-<div class="highlight"><pre><span></span><span class="nb">cd</span> damBreak
-</pre></div>
-<p>And after copying the above runscript into <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">run_job.slm</code> lets submit the job:</p>
+<p>And to run the job issue the following command in the terminal:</p>
 <div class="highlight"><pre><span></span>sbatch run_job.slm
 </pre></div>
 
