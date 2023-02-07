@@ -13101,9 +13101,9 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>Below are example submission scripts for several different codes.</p>
-<p>These examples copy the run data from the submission directory in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> area to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> before the run, and copy any files back to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> afterwards. The script then cleans up by removing the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">working_directory</code> in the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> area (this will be done automatically, but is perhaps a good habit to get into for furture developments in terms of storage were this may not be the case).</p>
-<p>Obviously there are an infinite number of ways to structure the logic in your submission scripts in order to handle the data transfer between <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> and <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code>.</p>
-<p>The following examples can be adapted to your own needs. They should be submitted from the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> storage area, they will create a temporary working directory in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER/$SLURM_JOB_ID</code> and copy the contents of the submission folder over to the working directory. After the run it copies the contents of the working directory in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER/SLURM_JOB_ID</code> back to the submission directory in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code>. It then cleans up the working directory.</p>
+<p>These examples copy the run data from the submission directory in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> area to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code> before the run, and copy any files back to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> afterwards. The script then cleans up by removing the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">working_directory</code> in the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> area (this will be done automatically, but is perhaps a good habit to get into for furture developments in terms of storage were this may not be the case).</p>
+<p>Obviously there are an infinite number of ways to structure the logic in your submission scripts in order to handle the data transfer between <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> and <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource</code>.</p>
+<p>The following examples can be adapted to your own needs. They should be submitted from the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> storage area.</p>
 
 </div>
 </div>
@@ -13111,9 +13111,44 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Account-code">Account code<a class="anchor-link" href="#Account-code">&#182;</a></h2><p>The account code used in your run script <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --account=ACCOUNT_CODE</code> should match the resource allocation you wish to run your job against. If you don't know your resource allocation code check the research computing account managemnet portal at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">rcam.bath.ac.uk</code> (you need to be on the University's VPN All traffic), or ask your account administrator.</p>
-<h2 id="QOS">QOS<a class="anchor-link" href="#QOS">&#182;</a></h2><p>The quality of service (QOS) set in your run script with e.g. <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --qos=spot-hbv3-120</code> should match the partition name you are submitting to.</p>
+<h2 id="Slurm-directives">Slurm directives<a class="anchor-link" href="#Slurm-directives">&#182;</a></h2><p>Every line that starts with a <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH</code> is a directive for <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> this is where we tell slurm the resources we want for our job.</p>
+<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --account=</code> tells slurm what account you wish to run against. The account code used in your run script <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --account=ACCOUNT_CODE</code> should match the resource allocation you wish to run your job against. If you don't know your resource allocation code check the research computing account managemnet portal at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">rcam.bath.ac.uk</code> (you need to be on the University's VPN All traffic), or ask your account administrator. or use the command <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sacctmgr show associations user=userid --parsable2</code>. This command will also tell you the limits on the account, and what QOS (and partitions) you have access to.</p>
+<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --job-name=</code> gives the job a name, which you can identify in the queue - you can call the job whatever you want that helps you to identify it.</p>
+<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --partition=</code> tells slurm what partition to put the job on.</p>
+<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --qos=</code> tells slurm what Quality of Service you wish to run with. The QOS is simply a way for admins to apply rules to the resources you can access, and the priority of the job. For Nimbus HPC systems the qos will match the partition name - and <strong>remember</strong> if you don't include it you will get an error.</p>
+<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --time=</code> tells slurm how long you wish to run the job for, with several acceptable formats:  "minutes", "minutes:seconds", "hours:minutes:seconds", "days-hours", "days-hours:minutes" and "days-hours:minutes:seconds" e.g. <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">1-01:20:00</code> will request a runtime of 25 hours and 20 mins.</p>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="w3-panel w3-leftbar w3-border-yellow w3-pale-yellow w3-padding-small">
+    <h3 id="-submitting-a-job%20"><i class="fa fa-pencil-square-o"></i> submitting a job
+</h3>
+    <p>First create a text file named <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">test.txt</code> with the following in your campaign folder.</p>
+<div class="highlight"><pre><span></span>My<span class="w"> </span>first<span class="w"> </span>nimbus<span class="w"> </span>run
+</pre></div>
+<p>Now create a runscript to copy this file over to the fast local storage at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code>, print the details to an output file called <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">my_output.txt</code> and copy the output back at the end of the run.</p>
+<p>Hint:  You can check what accounts you have access to with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sacctmgr</code>, and you will also have access to a folder /campaign/account_code (not case sensitive - the campaign folder will be in capitals).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
+    <h3 id="-Copying-back-the-stderr-and-stdout-files%20"><i class="fa fa-info-circle"></i> Copying back the stderr and stdout files
+</h3>
+    <p>If we copy everythig in our working directory to the compute node we will also copy the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">stderr</code> and <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">stdout</code> files given by:</p>
+<div class="highlight"><pre><span></span><span class="c1">#SBATCH --output=%x.%j.o</span>
+<span class="c1">#SBATCH --error=%x.%j.e</span>
+</pre></div>
+<p>This will copy them at a snapshot in time from the start of our job. The file will continue to be written to in our campaign directory - so either we must specify a <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">stderr</code> <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">stdout</code> file on the local storage, or <strong>be sure not to copy back the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">stderr</code> and <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">stdout</code> files from <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code></strong> - as it will over write anything that has subsequently been written to them with the files from an earlier point in time.</p>
+<p>The next example runscript shows an approach for using rsync to avoid copying these files.</p>
+</div>
 </div>
 </div>
 </div>
