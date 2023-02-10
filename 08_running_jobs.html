@@ -13100,10 +13100,11 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Below are example submission scripts for several different codes.</p>
-<p>These examples copy the run data from the submission directory in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> area to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code> before the run, and copy any files back to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> afterwards. The script then cleans up by removing the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">working_directory</code> in the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> area (this will be done automatically, but is perhaps a good habit to get into for furture developments in terms of storage were this may not be the case).</p>
+<p>Below are example submission scripts for Nimbus to illustrate the typical workflow2.</p>
+<p>These examples copy the run data from the submission directory in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> area to the fast local disk mounted at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code> before the run, and copy any necessary files back to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> afterwards. The script then cleans up by removing the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">working_directory</code> in the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource</code> area (this will be done automatically, but is perhaps a good habit to get into for furture developments in terms of storage were this may not be the case).</p>
 <p>Obviously there are an infinite number of ways to structure the logic in your submission scripts in order to handle the data transfer between <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> and <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource</code>.</p>
-<p>The following examples can be adapted to your own needs. They should be submitted from the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> storage area.</p>
+<p>The following examples can be adapted to your own needs. Typically they will be submitted from the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> storage area.</p>
+<p>Finally - if the local disk found in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code> is not big enough for your outputs then you can use the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> environment variable which points to a folder set up with each run, specifically for that run.</p>
 
 </div>
 </div>
@@ -13124,15 +13125,44 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="w3-panel w3-leftbar w3-border-yellow w3-pale-yellow w3-padding-small">
-    <h3 id="-submitting-a-job%20"><i class="fa fa-pencil-square-o"></i> submitting a job
-</h3>
-    <p>First create a text file named <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">test.txt</code> with the following in your campaign folder.</p>
+<h2 id="Submitting-a-simple-job">Submitting a simple job<a class="anchor-link" href="#Submitting-a-simple-job">&#182;</a></h2><p>Create a text file named <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">test.txt</code> with the following in your campaign folder.</p>
 <div class="highlight"><pre><span></span>My<span class="w"> </span>first<span class="w"> </span>nimbus<span class="w"> </span>run
 </pre></div>
-<p>Now create a runscript to copy this file over to the fast local storage at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code>, print the details to an output file called <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">my_output.txt</code> and copy the output back at the end of the run.</p>
+<p>Now we can create a runscript to copy this file over to the fast local storage at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code>, print the details to an output file called <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">my_output.txt</code> and copy the output back at the end of the run.</p>
 <p>Hint:  You can check what accounts you have access to with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sacctmgr</code>, and you will also have access to a folder /campaign/account_code (not case sensitive - the campaign folder will be in capitals).</p>
+
 </div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="c1">#SBATCH --account=account_code_here</span>
+<span class="c1">#SBATCH --job-name=JOB_NAME</span>
+<span class="c1">#SBATCH --output=%x.%j.o</span>
+<span class="c1">#SBATCH --error=%x.%j.e</span>
+<span class="c1">#SBATCH --nodes=1</span>
+<span class="c1">#SBATCH --ntasks-per-node=1</span>
+<span class="c1">#SBATCH --partition=spot-fsv2-1</span>
+<span class="c1">#SBATCH --qos=spot-fsv2-1</span>
+<span class="c1">#SBATCH --time=04:00:00</span>
+
+<span class="c1"># set campaigndir as our current working directory for copy back</span>
+<span class="nv">campaigndir</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+<span class="c1"># create a workdir on the fast local disk</span>
+<span class="nv">workdir</span><span class="o">=</span>/mnt/resource/workdir
+mkdir<span class="w"> </span>-p<span class="w"> </span><span class="nv">$workdir</span>
+<span class="c1"># copy our input file over to our workdir</span>
+cp<span class="w"> </span>test.txt<span class="w"> </span><span class="nv">$workdir</span>
+<span class="c1"># change dir to our workdir</span>
+<span class="nb">cd</span><span class="w"> </span><span class="nv">$workdir</span>
+<span class="c1"># do our run</span>
+cat<span class="w"> </span>test.txt<span class="w"> </span>&gt;<span class="w"> </span>my_output.txt
+<span class="c1"># cp our output back to our campaigndir</span>
+cp<span class="w"> </span>my_output.txt<span class="w"> </span><span class="nv">$campaigndir</span>/
+</pre></div>
+
 </div>
 </div>
 </div>
