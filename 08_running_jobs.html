@@ -13189,29 +13189,27 @@ cp<span class="w"> </span>-r<span class="w"> </span><span class="nv">$WM_PROJECT
 <span class="c1"># set campaigndir as our current working directory for copy back</span>
 
 <span class="nv">campaigndir</span><span class="o">=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span>
+<span class="nv">localdisk</span><span class="o">=</span>/mnt/resource
+mkdir<span class="w"> </span><span class="nv">$localdisk</span>/workdir
+<span class="nv">workdir</span><span class="o">=</span><span class="nv">$localdisk</span>/workdir
 
-<span class="c1"># Check we are submitting from campaign </span>
-<span class="nb">echo</span><span class="w"> </span><span class="nv">$campaigndir</span><span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="k">if</span><span class="w"> </span>grep<span class="w"> </span>-q<span class="w"> </span>campaign<span class="p">;</span><span class="w"> </span><span class="k">then</span><span class="w"> </span>
-<span class="w">    </span><span class="c1"># Copy any inputs required to the work directory:</span>
-<span class="w">    </span><span class="c1"># excluding and files with a &lt;JOB_NAME&gt; (whatever your job name actualy is...) prefix, so your</span>
-<span class="w">    </span><span class="c1"># output and error files don&#39;t get over written on the copy back</span>
-<span class="w">    </span>rsync<span class="w"> </span>-aP<span class="w"> </span>--exclude<span class="o">=</span>JOB_NAME.*<span class="w"> </span><span class="nv">$campaigndir</span>/*<span class="w"> </span><span class="nv">$BURSTBUFFER</span>
 
-<span class="w">    </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$BURSTBUFFER</span><span class="p">;</span>
-<span class="w">    </span><span class="nb">echo</span><span class="w">  </span><span class="s2">&quot;Work directory&quot;</span><span class="w"> </span><span class="nv">$BURSTBUFFER</span><span class="w"> </span><span class="p">;</span>
+<span class="c1"># Copy any inputs required to the work directory:</span>
+<span class="c1"># excluding and files with a &lt;JOB_NAME&gt; (whatever your job name actualy is...) prefix, so your</span>
+<span class="c1"># output and error files don&#39;t get over written on the copy back</span>
+rsync<span class="w"> </span>-aP<span class="w"> </span>--exclude<span class="o">=</span>JOB_NAME.*<span class="w"> </span><span class="nv">$campaigndir</span>/*<span class="w"> </span><span class="nv">$workdir</span>
 
-<span class="w">    </span><span class="c1"># source the foamDotFile and do the run</span>
-<span class="w">    </span><span class="nb">source</span><span class="w"> </span><span class="nv">$WM_PROJECT_DIR</span>/etc/bashrc
-<span class="w">    </span>./Allrun
+<span class="nb">cd</span><span class="w"> </span><span class="nv">$workdir</span><span class="p">;</span>
+<span class="nb">echo</span><span class="w">  </span><span class="s2">&quot;Work directory&quot;</span><span class="w"> </span><span class="nv">$workdir</span><span class="w"> </span><span class="p">;</span>
 
-<span class="w">    </span><span class="c1"># Copy back any results you need to campaign.</span>
-<span class="w">    </span>srun<span class="w"> </span>cp<span class="w"> </span>-Rf<span class="w"> </span><span class="nv">$BURSTBUFFER</span>/*<span class="w">  </span><span class="nv">$campaigndir</span>/
-<span class="w">    </span><span class="c1">#Clean up burstbuffer</span>
-<span class="w">    </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="nv">$BURSTBUFFER</span>
-<span class="k">else</span>
-<span class="w">     </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Not submitting from campaign. Check your submission script.&quot;</span>
-<span class="w">     </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span><span class="p">;</span>
-<span class="k">fi</span>
+<span class="c1"># source the foamDotFile and do the run</span>
+<span class="nb">source</span><span class="w"> </span><span class="nv">$WM_PROJECT_DIR</span>/etc/bashrc
+./Allrun
+
+<span class="c1"># Copy back any results you need to campaign.</span>
+srun<span class="w"> </span>cp<span class="w"> </span>-Rf<span class="w"> </span><span class="nv">$workdir</span>/*<span class="w">  </span><span class="nv">$campaigndir</span>/
+<span class="c1">#Clean up burstbuffer</span>
+rm<span class="w"> </span>-rf<span class="w"> </span><span class="nv">$workdir</span>
 </pre></div>
 
 </div>
