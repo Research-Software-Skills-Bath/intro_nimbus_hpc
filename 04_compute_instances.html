@@ -12956,9 +12956,9 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .hll { background-color: #ffffcc }
 .highlight { background: #f8f8f8; }
 .highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
-.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .err { border: 1px solid #F00 } /* Error */
 .highlight .k { color: #008000; font-weight: bold } /* Keyword */
-.highlight .o { color: #666666 } /* Operator */
+.highlight .o { color: #666 } /* Operator */
 .highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
 .highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
 .highlight .cp { color: #9C6500 } /* Comment.Preproc */
@@ -12967,6 +12967,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
 .highlight .gd { color: #A00000 } /* Generic.Deleted */
 .highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
 .highlight .gr { color: #E40000 } /* Generic.Error */
 .highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
 .highlight .gi { color: #008400 } /* Generic.Inserted */
@@ -12974,34 +12975,34 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
 .highlight .gs { font-weight: bold } /* Generic.Strong */
 .highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .gt { color: #04D } /* Generic.Traceback */
 .highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
 .highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
 .highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
 .highlight .kp { color: #008000 } /* Keyword.Pseudo */
 .highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
 .highlight .kt { color: #B00040 } /* Keyword.Type */
-.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .m { color: #666 } /* Literal.Number */
 .highlight .s { color: #BA2121 } /* Literal.String */
 .highlight .na { color: #687822 } /* Name.Attribute */
 .highlight .nb { color: #008000 } /* Name.Builtin */
-.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
-.highlight .no { color: #880000 } /* Name.Constant */
-.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .nc { color: #00F; font-weight: bold } /* Name.Class */
+.highlight .no { color: #800 } /* Name.Constant */
+.highlight .nd { color: #A2F } /* Name.Decorator */
 .highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
 .highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
-.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nf { color: #00F } /* Name.Function */
 .highlight .nl { color: #767600 } /* Name.Label */
-.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nn { color: #00F; font-weight: bold } /* Name.Namespace */
 .highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
 .highlight .nv { color: #19177C } /* Name.Variable */
-.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
-.highlight .w { color: #bbbbbb } /* Text.Whitespace */
-.highlight .mb { color: #666666 } /* Literal.Number.Bin */
-.highlight .mf { color: #666666 } /* Literal.Number.Float */
-.highlight .mh { color: #666666 } /* Literal.Number.Hex */
-.highlight .mi { color: #666666 } /* Literal.Number.Integer */
-.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #BBB } /* Text.Whitespace */
+.highlight .mb { color: #666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666 } /* Literal.Number.Float */
+.highlight .mh { color: #666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666 } /* Literal.Number.Oct */
 .highlight .sa { color: #BA2121 } /* Literal.String.Affix */
 .highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
 .highlight .sc { color: #BA2121 } /* Literal.String.Char */
@@ -13016,12 +13017,12 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .highlight .s1 { color: #BA2121 } /* Literal.String.Single */
 .highlight .ss { color: #19177C } /* Literal.String.Symbol */
 .highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
-.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .fm { color: #00F } /* Name.Function.Magic */
 .highlight .vc { color: #19177C } /* Name.Variable.Class */
 .highlight .vg { color: #19177C } /* Name.Variable.Global */
 .highlight .vi { color: #19177C } /* Name.Variable.Instance */
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
-.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
+.highlight .il { color: #666 } /* Literal.Number.Integer.Long */
     </style>
 
 
@@ -13246,8 +13247,8 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Choosing-the-right-instance">Choosing the right instance<a class="anchor-link" href="#Choosing-the-right-instance">&#182;</a></h3><p>Choosing the correct compute instance and partition will depend primarily on the code/caculation you are running, but it also will depend on cost, runtime and whether an interruption is acceptable (more on that in spot vs pay-as-you-go).</p>
-<p>The compute instances listed above can be seperated into different types as described by azure:</p>
+<h3 id="Choosing-the-right-instance">Choosing the right instance<a class="anchor-link" href="#Choosing-the-right-instance">&#182;</a></h3><p>Azure offers a range of virtual machines (VMs) optimized for both CPU and GPU-intensive workloads. Choosing the correct compute instance and partition will depend primarily on your specific scientific research requirements such as workload you are running, and will depend on cost, runtime and whether an interruption is acceptable (more on that in spot vs pay-as-you-go).</p>
+<p>The instance types currently available in Nimbus:</p>
 <ul>
 <li><strong>High performance compute</strong>: hb, hbv2, hbv3 &amp; hc series</li>
 <li><strong>GPU enabled</strong>: ncv3, ncv3r, &amp; ndv2</li>
@@ -13280,7 +13281,14 @@ div#notebook {
 </ul>
 <p>Spot pricing allows access to unused Azure compute capacity at large discounts, up to 90%, compared to Pay-As-You-Go prices. The drawback is that the job can be interrupted at any time and be evicted, depending on the available Azure capacity.</p>
 <p>Deciding whether to use the Spot or Pay-As-You-Go tiers will depend on how easy it is to pick up your calculation should it be evicted, the time scales for you calculation and your available budget.</p>
-<p>If your job is subject to an eviction you will recieve a message in the stdout of the job, and the status in the finance portal will be <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">EVICTED</code>. At present if a job is evicted you will not be charged for it, though this may change in future.</p>
+<p>If your job is subject to an eviction you will recieve a message in the stdout of the job, and the status in the finance portal will be <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">EVICTED</code>.</p>
+<p>Users should use the <a href="https://cost-calc.hpc.bath.ac.uk/">Research Computing Cost Estimator</a> RCCE to calculate compute cost (please note that this estimator will only include the instances available in Nimbus). The payment process involves a finance check on the project balance prior to job submission:</p>
+<ol>
+<li>Job successfully completed: amount is deduced from user’s account. </li>
+<li>Node evicted: the University covers this cost if the simulation time is less than one hour. For more than one hour, the user will have the funds deducted from the project account. </li>
+<li>Job failure: the user will have the fund deducted from the project account.</li>
+</ol>
+<p><img src="./images/jobeviction.png" alt="job-eviction"></p>
 
 </div>
 </div>
