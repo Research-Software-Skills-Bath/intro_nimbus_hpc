@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>09_openondemand</title>
+<title>001_introHPC</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13094,7 +13094,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Open-On-Demand">Open On Demand<a class="anchor-link" href="#Open-On-Demand">&#182;</a></h1>
+<h1 id="Introducing-High-Performance-Computing">Introducing High Performance Computing<a class="anchor-link" href="#Introducing-High-Performance-Computing">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13106,9 +13106,97 @@ div#notebook {
 </h3>
     <ul>
 <li><strong>Teaching:</strong> 10 min</li>
-<li><strong>Exercises:</strong> 5 min</li>
+<li><strong>Exercises:</strong> 0 min</li>
 </ul>
-<h2 id="Questions"><strong>Questions</strong><a class="anchor-link" href="#Questions">&#182;</a></h2>
+<p><strong>Questions</strong></p>
+<ul>
+<li>Why would I be interested in High Performance Computing (HPC)?</li>
+<li>What can I expect to learn from this course?</li>
+</ul>
+<p><strong>Objectives</strong></p>
+<ul>
+<li>Understand that HPC is a collection of computing resourcesto deliver higher performance than a single machine.</li>
+<li>Understand tha HPC can help you run your calculations more effieciently and more reliably.</li>
+<li>Identify how an HPC system could benefit you.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="What-is-HPC-and-why-is-it-different-to-using-your-desktop?">What is HPC and why is it different to using your desktop?<a class="anchor-link" href="#What-is-HPC-and-why-is-it-different-to-using-your-desktop?">&#182;</a></h3><p>“High Performance Computing most generally refers to the practice of aggregating computing power in a way that delivers much higher performance than one could get out of a typical desktop computer or workstation in order to solve large problems in science, engineering, or business.” - insideHPC</p>
+<p><img src="./images/balena-lights.jpg" alt="Balena"></p>
+<p>Lets consider seeveral research scenarios:</p>
+<ul>
+<li>A statistics student wants to cross-validate a model. This involves running the model 1000 times – but each run takes an hour. Running the model on a laptop will take over a month! In this research problem, final results are calculated after all 1000 models have run, but typically only one model is run at a time (in serial) on the laptop. Since each of the 1000 runs is independent of all others, and given enough computers, it’s theoretically possible to run them all at once (in parallel).</li>
+<li>A genomics researcher has been using small datasets of sequence data, but soon will be receiving a new type of sequencing data that is 10 times as large. It’s already challenging to open the datasets on a computer – analyzing these larger datasets will probably crash it. In this research problem, the calculations required might be impossible to parallelize, but a computer with more memory would be required to analyze the much larger future data set.</li>
+<li>An engineer is using a fluid dynamics package that has an option to run in parallel. So far, this option was not used on a desktop. In going from 2D to 3D simulations, the simulation time has more than tripled. It might be useful to take advantage of that option or feature. In this research problem, the calculations in each region of the simulation are largely independent of calculations in other regions of the simulation. It’s possible to run each region’s calculations simultaneously (in parallel), communicate selected results to adjacent regions as needed, and repeat the calculations to converge on a final set of results. In moving from a 2D to a 3D model, both the amount of data and the amount of calculations increases greatly, and it’s theoretically possible to distribute the calculations across multiple computers communicating over a shared network.</li>
+</ul>
+<p>In all these cases, access to more (and larger) computers is needed. Those computers should be usable at the same time, solving many researchers’ problems in parallel.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="PC-vs-HPC">PC vs HPC<a class="anchor-link" href="#PC-vs-HPC">&#182;</a></h2><p>Your PC is your local computing resource, good for small computational tasks. It is flexible, easy to set-up and configure for new tasks, though it has limited computational resources.</p>
+<p><img src="./images/pc.webp" alt="PC"></p>
+<p>Let’s dissect what resources programs running on a laptop require:</p>
+<ul>
+<li>the keyboard and/or touchpad is used to tell the computer what to do (Input)</li>
+<li>the internal computing resources Central Processing Unit (CPU_ and Memory are used to perform calculations the Screen Display depicts progress and results (Output) alternatvely, both input and output can be done using data stored on Disk or on a Network</li>
+<li>Schematically, this can be reduced to the following:</li>
+</ul>
+<p><img src="./images/Simple_Von_Neumann_Architecture.svg" alt="Balena"></p>
+<h3 id="If-Our-PC-isnt-Powerful-Enough?">If Our PC isnt Powerful Enough?<a class="anchor-link" href="#If-Our-PC-isnt-Powerful-Enough?">&#182;</a></h3><p>When the task to solve become heavy on computations, the operations are typically out-sourced from the local laptop or desktop to elsewhere. Take for example the task to find the directions for your next business trip. The capabilities of your laptop are typically not enough to calculate that route in real time, so you use a website, which in turn runs on a computer that is almost always a machine that is not in the same room as you are. Such a remote machine is generically called a server.</p>
+<p><img src="./images/servers-openclipartorg-ericlemerdy.svg" width="300" height="300"></p>
+<p>The internet made it possible for these data centers to be far remote from your laptop.</p>
+<p>The server itself has no direct display or input methods attached to it. But most importantly, it has much more storage, memory and compute capacity than your laptop will ever have. However, you still need a local device (laptop, workstation, mobile phone or tablet) to interact with this remote machine.</p>
+<h3 id="HPC-Cluster">HPC Cluster<a class="anchor-link" href="#HPC-Cluster">&#182;</a></h3><p>If the computational task or analysis to complete is daunting for a single server, larger agglomerations of servers are used. These go by the name of clusters or supercomputers.</p>
+<p>A HPC system is typically described as a cluster as it is made up of a <strong><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">cluster</code></strong> of computers, or compute nodes. Each individual compute node is typically a lot more powerful than any PC  - i.e. more memory, many more and faster CPU cores.</p>
+<p><img src="./images/compute_cluster.png" alt="Cluster"></p>
+<p>The methodology of providing the input data, communicating options and flags as well as retrieving the results is quite different to using a plain laptop. Moreover, using a GUI style interface is often discarded in favor of using the command line. This imposes a double paradigm shift for prospect users:</p>
+<ul>
+<li>they work with the command line (not a GUI style user interface)</li>
+<li>they work with a distributed set of computers (called nodes)</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Parallelisation">Parallelisation<a class="anchor-link" href="#Parallelisation">&#182;</a></h2><p>But how doe we use the resources on the cluster?</p>
+<p>Lets start with the idea of processing 1 input file  to generate 1 output (result) file. On a personal computer this would happen with a single core in the CPU.</p>
+<p><img src="./images/serial_hpc_crop.png" alt="serial"></p>
+<p>On a cluster we have access to many cores on a single node, so in theory we could split up the analysis of a single file into multiple distinct processes and use as many cores to speed up the generation of an output file. This is called multithreading, i.e. using multiple threads or cores.</p>
+<p><img src="./images/multithreaded_hpc.png" alt="multi"></p>
+<p>Now, what if we had 3 input files? Well, we could process these files in serial, i.e. use the same core(s) over and over again, as shown in the image below.</p>
+<p><img src="./images/multithreaded_hpc_3samples.png" alt="multi"></p>
+<p>This is great, but it is not as efficient as multithreading each analysis, and using a set of 8 cores for each of the three input samples. This is actually considered to be true parallelization.</p>
+<p><img src="./images/multithreaded_hpc.png" alt="multi"></p>
+<p>As we have already seen, the power of HPC systems comes from parallelism, i.e. having lots of processors/disks etc. connected together rather than having more powerful components than your laptop or workstation.</p>
+<p>Often, when running research programs on HPC you will need to run a program that has been built to use the MPI (Message Passing Interface) parallel library. The MPI library allows programs to exploit multiple processing cores in parallel to allow researchers to model or simulate faster on larger problem sizes. The details of how MPI work are not important for this course or even to use programs that have been built using MPI; however, MPI programs typically have to be launched in job submission scripts in a different way to serial programs and users of parallel programs on HPC systems need to know how to do this. Specifically, launching parallel MPI programs typically requires four things:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="w3-panel w3-leftbar w3-border-green w3-pale-green w3-padding-small">
+    <h3 id="-Key-Points%3A%20"><i class="fa fa-key"></i> Key Points:
+</h3>
+    <ul>
+<li>An HPC system is a set of networked machines.</li>
+<li>HPC systems typically provides login nodes and a set of worker compute nodes</li>
+<li>The resources found on independent (worker) nodes can vary in volume and type (amount of RAM, processor architecture, availability of network mounted file systems, etc.)</li>
+<li>The power of the HPC cluster can be harnassed with parallelism, using libraries such as MPI.</li>
+</ul>
 </div>
 </div>
 </div>
@@ -13117,17 +13205,6 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="w3-bar w3-blue-grey">
-<a href="./08_running_jobs.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
-<a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
-<a href="./00_schedule.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
-</div>
 </div>
 </div>
 </div>
