@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>08_running_jobs</title>
+<title>07_storage-soln</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13094,156 +13094,20 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Running-a-job">Running a job<a class="anchor-link" href="#Running-a-job">&#182;</a></h1>
+<h1 id="Solutions">Solutions<a class="anchor-link" href="#Solutions">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Below are example submission scripts for Nimbus to illustrate the typical workflow2.</p>
-<p>The following example can be adapted to your own needs. Typically they will be submitted from the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code> storage area.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Slurm-directives">Slurm directives<a class="anchor-link" href="#Slurm-directives">&#182;</a></h2><p>Every line that starts with a <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH</code> is a directive for <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> this is where we tell slurm the resources we want for our job.</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --account=</code> tells slurm what account you wish to run against. The account code used in your run script <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --account=ACCOUNT_CODE</code> should match the resource allocation you wish to run your job against. If you don't know your resource allocation code check the research computing account managemnet portal at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">rcam.bath.ac.uk</code> (you need to be on the University's VPN All traffic), or ask your account administrator. or use the command <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sacctmgr show associations user=userid --parsable2</code>. This command will also tell you the limits on the account, and what QOS (and partitions) you have access to.</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --job-name=</code> gives the job a name, which you can identify in the queue - you can call the job whatever you want that helps you to identify it.</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --partition=</code> tells slurm what partition to put the job on.</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --qos=</code> tells slurm what Quality of Service you wish to run with. The QOS is simply a way for admins to apply rules to the resources you can access, and the priority of the job. For Nimbus HPC systems the qos will match the partition name - and <strong>remember</strong> if you don't include it you will get an error.</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">#SBATCH --time=</code> tells slurm how long you wish to run the job for, with several acceptable formats:  "minutes", "minutes:seconds", "hours:minutes:seconds", "days-hours", "days-hours:minutes" and "days-hours:minutes:seconds" e.g. <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">1-01:20:00</code> will request a runtime of 25 hours and 20 mins.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Submitting-a-simple-job">Submitting a simple job<a class="anchor-link" href="#Submitting-a-simple-job">&#182;</a></h2><p>Create a text file named <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">output.txt</code> with the following in your campaign folder.</p>
-<div class="highlight"><pre><span></span>this<span class="w"> </span>is<span class="w"> </span>my<span class="w"> </span>nimbus<span class="w"> </span><span class="nb">test</span>
+<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
+    <h3 id="-Go-home%20"><i class="fa fa-eye"></i> Go home
+</h3>
+    <p>We can use the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$HOME</code> variable in exactly the same way as we used <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$SCRATCH</code>:</p>
+<div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span><span class="nv">$HOME</span>
+<span class="nb">pwd</span>
 </pre></div>
-<p>Hint:  You can check what accounts you have access to with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sacctmgr</code>, and you will also have access to a folder /campaign/account_code (not case sensitive - the campaign folder will be in capitals).</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>First create a python file called <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">test_script.py</code> in your campaign directory containing the following:</p>
-
-<pre><code style="">with open('output.txt', 'w') as f:
-    f.write('this is my nimbus test')</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Then create a slurm script defining the parameters of the run called <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">run_python_script.slm</code> which contains the following:</p>
-<div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
-<span class="c1">#SBATCH --account=RA-code</span>
-<span class="c1">#SBATCH --job-name=JOB_NAME</span>
-<span class="c1">#SBATCH --output=%x.%j.o</span>
-<span class="c1">#SBATCH --error=%x.%j.e</span>
-<span class="c1">#SBATCH --nodes=1</span>
-<span class="c1">#SBATCH --ntasks-per-node=1</span>
-<span class="c1">#SBATCH --partition=spot-fsv2-1</span>
-<span class="c1">#SBATCH --qos=spot-fsv2-1</span>
-<span class="c1">#SBATCH --time=00:01:00</span>
-
-<span class="c1"># Load Modules</span>
-module<span class="w"> </span>purge
-module<span class="w"> </span>load<span class="w"> </span>Python/3.9.5-GCCcore-10.3.0
-
-<span class="c1"># Do Run</span>
-python3<span class="w"> </span>test_script.py
-</pre></div>
-<p>Finally to submit the script, in the command line run:</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sbatch run_python_job.slm</code></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="DLPOLY">DLPOLY<a class="anchor-link" href="#DLPOLY">&#182;</a></h2><p>We will run an example job to run a DLPOLY simulation, using the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">DL_POLY_Classic/1.10-foss-2020b</code> module on the spot_fsv2_16 instance including the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">--oversubscribe</code> tag.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>An example run script - create a file named <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">run_job.slm</code> with the following contents (remembering to replace the account code with that of your resource allocation):</p>
-<div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
-<span class="c1">#SBATCH --account=BA-CH2FAM-001</span>
-<span class="c1">#SBATCH --job-name=dlp</span>
-<span class="c1">#SBATCH --output=dlp.%j.o</span>
-<span class="c1">#SBATCH --error=dlp.%j.e</span>
-<span class="c1">#SBATCH --nodes=1</span>
-<span class="c1">#SBATCH --ntasks=16</span>
-<span class="c1">#SBATCH --partition=spot-fsv2-16</span>
-<span class="c1">#SBATCH --qos=spot-fsv2-16</span>
-<span class="c1">#SBATCH --time=06:00:00</span>
-
-<span class="c1">#Identify node correctly</span>
-<span class="nb">source</span><span class="w"> </span>/apps/build/easy_build/scripts/id_instance.sh
-<span class="nb">source</span><span class="w"> </span>/apps/build/easy_build/scripts/setup_modules.sh
-
-<span class="c1">#Purge modules and load required modules</span>
-module<span class="w"> </span>purge
-module<span class="w"> </span>load<span class="w"> </span>DL_POLY_Classic/1.10-foss-2020b
-
-<span class="c1">#Run job</span>
-mpirun<span class="w"> </span>--oversubscribe<span class="w"> </span>-np<span class="w"> </span><span class="m">16</span><span class="w"> </span>--host<span class="w"> </span><span class="k">$(</span>hostname<span class="k">)</span>:16<span class="w"> </span>DLPOLY.X
-</pre></div>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>And to run the job issue the following command in the terminal:</p>
-<div class="highlight"><pre><span></span>sbatch<span class="w"> </span>run_job.slm
-</pre></div>
-<p><strong>Note</strong>: The <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">source</code> commands in the slurm script helps the node to recognise its 'identity'</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Interactive-job">Interactive job<a class="anchor-link" href="#Interactive-job">&#182;</a></h3><p>It is also possible to obtain a compute node and work interactively.</p>
-<p>Issuing the following command in the terminal will request a spot-hbv3-120 compute instance for 6 hours:</p>
-
-<pre><code style="">srun --partition spot-hbv3-120 --nodes 1  --account prj4_phase1  --qos spot-hbv3-120 --job-name "interactive" --cpus-per-task 120 --time 6:00:00 --pty bash</code></pre>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="w3-bar w3-blue-grey">
-<a href="./07_transferring_files.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
-<a href="./001_introHPC.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
-<a href="./001_introHPC.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
 </div>
 </div>
 </div>

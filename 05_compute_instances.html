@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>02_infrastructure</title>
+<title>05_compute_instances</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13094,8 +13094,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Infrastructure">Infrastructure<a class="anchor-link" href="#Infrastructure">&#182;</a></h1><p>A brief overview of the Nimbus Infrastructure</p>
-
+<h1 id="Compute-Instances">Compute Instances<a class="anchor-link" href="#Compute-Instances">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13111,12 +13110,18 @@ div#notebook {
 </ul>
 <p><strong>Questions</strong></p>
 <ul>
-<li>What does the underlying infrastructure for Nimbus look like?</li>
+<li>What compute instances are available?</li>
+<li>How do I choose the right instance?</li>
+<li>What do these cost?</li>
+<li>How do I see the partitions?</li>
+<li>What is spot and Pay as you Go?</li>
 </ul>
 <p><strong>Objectives</strong></p>
 <ul>
-<li>Know that the Nimbus has effectively has two clusters, in order to allow for continuous development of the system. </li>
-<li>KNow that when the reseacrh computing team switch from <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">blue</code> to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">green</code> you will need to log out and log back in.</li>
+<li>Understand what compute instances are currently available</li>
+<li>Know where to get information on the compute instances, including costs</li>
+<li>Understand the difference between spot and pay-as-you-go</li>
+<li>Know which instance to use for your code</li>
 </ul>
 </div>
 </div>
@@ -13125,11 +13130,184 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Nimbus-Infrastructure">Nimbus Infrastructure<a class="anchor-link" href="#Nimbus-Infrastructure">&#182;</a></h2><p>The underlying infrastructure for the Nimbus system can be seen below:</p>
-<p><img src="./images/Infrastructure.png" alt="infrastrcture"></p>
-<p>Services offered in the cloud can change rapidly, an Nimbus has been designed with this in mind. We use <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">blue-green</code> deployment, in order to allow rolling updates of the system with continuity of service. In essence there are two clusters, one <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> and one <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">inactive</code>.  In order to ensure high availablity and increase resilience, on each cluster there are two login-nodes, and two schedulers.</p>
-<p>As a user most of this will be unnoticable. The you will automatically be put onto one of the login nodes on the <em>active cluster</em> when you log onto the system.</p>
-<p>The only time you may have to take action as a result of this infrastructure is if the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> cluster is <em>switched</em>. In which case you will get a message to the terminal informing you about the upcoming switch, and you will have to log out and back in in order to continue your work. Your jobs will continue to run, and you will not have to resubmit them.</p>
+<h2 id="Slurm-partitions">Slurm partitions<a class="anchor-link" href="#Slurm-partitions">&#182;</a></h2><p>The new hpc service Nimbus provides user access to an array of different compute instances. These instances are accessed through different slurm partitions.</p>
+<p>In order to list the partitions issue the following command:</p>
+<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sinfo</code></p>
+<p>which will list the partitions, the nodes in the partitions, availability and the current state:</p>
+<p><img src="./images/nimbus_partitions.png" alt="linux-login"></p>
+<p>The partitions follow a naming converntion</p>
+<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[pricing tier]-[instance type]-[no of cpus-per-node]</code></p>
+<p>So, for example the partition <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">spot-hbv3-120</code> is for spot priced hbv3 instances with 120 CPUs per node, while <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">paygo-hc-44</code> is for pay-as-you-go priced hc instances with 44 CPUs per node.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Compute-Instances">Compute Instances<a class="anchor-link" href="#Compute-Instances">&#182;</a></h2><p>The instance types currently available are listed below:</p>
+<table>
+<thead><tr>
+<th>Instance type</th>
+<th>CPU model</th>
+<th>vCPUS</th>
+<th>GPU model</th>
+<th>vGPUS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>fsv2</td>
+<td>Intel Skylake</td>
+<td>2,4,8,16,32,48,64,72</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>hb</td>
+<td>AMD Epyc Naples</td>
+<td>60</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>hbv2</td>
+<td>AMD Epyc Rome</td>
+<td>120</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>hbv3</td>
+<td>AMD Epyc Milan</td>
+<td>120</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>hc</td>
+<td>Intel Skylake</td>
+<td>44</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>ncv3</td>
+<td>Intel Broadwell</td>
+<td>6</td>
+<td>Tesla V100</td>
+<td>1</td>
+</tr>
+<tr>
+<td>ncv3</td>
+<td>Intel Broadwell</td>
+<td>12</td>
+<td>Tesla V100</td>
+<td>2</td>
+</tr>
+<tr>
+<td>ncv3</td>
+<td>Intel Broadwell</td>
+<td>24</td>
+<td>Tesla V100</td>
+<td>4</td>
+</tr>
+<tr>
+<td>ncv3r</td>
+<td>Intel Broadwell</td>
+<td>24</td>
+<td>Tesla V100</td>
+<td>4</td>
+</tr>
+<tr>
+<td>ndv2</td>
+<td>Intel Skylake</td>
+<td>40</td>
+<td>Tesla V100</td>
+<td>8</td>
+</tr>
+</tbody>
+</table>
+<p>As mentioned above these instances are referenced in the slurm partition, along with the number of CPUs and the pricing tier.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
+    <h3 id="-Instance-types%20"><i class="fa fa-info-circle"></i> Instance types
+</h3>
+    <p>You can read more about the instance types here: <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/sizes">https://docs.microsoft.com/en-us/azure/virtual-machines/sizes</a> including the specs for each instance type.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Choosing-the-right-instance">Choosing the right instance<a class="anchor-link" href="#Choosing-the-right-instance">&#182;</a></h3><p>Azure offers a range of virtual machines (VMs) optimized for both CPU and GPU-intensive workloads. Choosing the correct compute instance and partition will depend primarily on your specific scientific research requirements such as workload you are running, and will depend on cost, runtime and whether an interruption is acceptable (more on that in spot vs pay-as-you-go).</p>
+<p>The instance types currently available in Nimbus:</p>
+<ul>
+<li><strong>High performance compute</strong>: hb, hbv2, hbv3 &amp; hc series</li>
+<li><strong>GPU enabled</strong>: ncv3, ncv3r, &amp; ndv2</li>
+<li><strong>Compute Optimised</strong>: fsv2</li>
+</ul>
+<p>The descriptions of the instances provided by Azure are as follows:</p>
+<ul>
+<li><strong>High Performance Compute</strong>: <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">Our fastest and most powerful CPU virtual machines with optional high-throughput network interfaces (RDMA).</code></li>
+<li><strong>GPU enabled</strong>: <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">Specialized virtual machines targeted for heavy graphic rendering and video editing, as well as model training and inferencing (ND) with deep learning. Available with single or multiple GPUs.</code></li>
+<li><strong>Compute Optimised</strong>: <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">High CPU-to-memory ratio. Good for medium traffic web servers, network appliances, batch processes, and application servers.</code></li>
+</ul>
+<p>Briefly:</p>
+<ul>
+<li>The <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hb*</code> instances are suggested for applications driven by memory bandwidth such as OpenFOAM and ANSYS.</li>
+<li>The <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hc*</code> &amp; <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">f*</code> instances are suggested for applications driven by compute such as HPL and ORCA.</li>
+<li>The <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">n*</code> partitions are for GPU accelerated workloads and visualization sessions.</li>
+</ul>
+<p>If in doubt - ask or test!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Spot-vs-Pay-As-You-Go">Spot vs Pay-As-You-Go<a class="anchor-link" href="#Spot-vs-Pay-As-You-Go">&#182;</a></h3><p>We have mentioned the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">pricing tier</code> above, which is referenced in the slurm partition names. This pricing tier refers to the two different tiers:</p>
+<ul>
+<li>Spot</li>
+<li>Pay-As-You-go</li>
+</ul>
+<p>Spot pricing allows access to unused Azure compute capacity at large discounts, up to 90%, compared to Pay-As-You-Go prices. The drawback is that the job can be interrupted at any time and be evicted, depending on the available Azure capacity.</p>
+<p>Deciding whether to use the Spot or Pay-As-You-Go tiers will depend on how easy it is to pick up your calculation should it be evicted, the time scales for you calculation and your available budget.</p>
+<p>If your job is subject to an eviction you will recieve a message in the stdout of the job, and the status in the finance portal will be <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">EVICTED</code>.</p>
+<p>Users should use the <a href="https://cost-calc.hpc.bath.ac.uk/">Research Computing Cost Estimator</a> RCCE to calculate compute cost (please note that this estimator will only include the instances available in Nimbus). The payment process involves a finance check on the project balance prior to job submission:</p>
+<ol>
+<li>Job successfully completed: amount is deduced from user’s account. </li>
+<li>Node evicted: the University covers this cost if the simulation time is less than one hour. For more than one hour, the user will have the funds deducted from the project account. </li>
+<li>Job failure: the user will have the fund deducted from the project account.</li>
+</ol>
+<p><img src="./images/jobeviction.png" alt="job-eviction"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Restrictions-on-Instances">Restrictions on Instances<a class="anchor-link" href="#Restrictions-on-Instances">&#182;</a></h3><p>The only restriction put in place by Research Computing on the size of jobs you are able to run on Nimbus is to restrict the number of nodes you can run on using the fsv2 instances to one. These are RDMA connected, and you cannot run single jobs across multiple nodes, hence the restriction.</p>
+<p>All other restrictions are put in place by your Resource Allocation Administrators using the finance portal. Should you wish to change the restrictions either do so in the portal, or contact the person that has given you access to the resource allocation and request they do so.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Indicative-Cost-of-Instances">Indicative Cost of Instances<a class="anchor-link" href="#Indicative-Cost-of-Instances">&#182;</a></h3><p>It is important to emphasise that <strong>different compute instances will incur different costs</strong>.</p>
+<p>A cost calculator has been launched that lists the current prices for each compute instance, as well as allowing you to cost up resources for inclusion in funding proposals.</p>
+<p><a href="https://cost-calc.hpc.bath.ac.uk/">https://cost-calc.hpc.bath.ac.uk/</a></p>
 
 </div>
 </div>
@@ -13141,9 +13319,10 @@ div#notebook {
     <h3 id="-Key-Points%3A%20"><i class="fa fa-key"></i> Key Points:
 </h3>
     <ul>
-<li>There are two different clusters on the Nimbus system.</li>
-<li>You will automcatically be put on the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> cluster when you log in.</li>
-<li>If we switch <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> clusters in order to update the system you will have to log out and back in.</li>
+<li>Different compute instances are accessed through different slurm partitions</li>
+<li>The Slurm partitions follow the naming convention: <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[pricing tier]-[instance type]-[no of cpus-per-node]</code></li>
+<li>There are two pricing tiers: Spot and Pay-As-You-Go. Spot benefits from significant discounts (up to 90%), but may be evicted</li>
+<li>Different instances are suitable for different calculation types and will cost different amounts </li>
 </ul>
 </div>
 </div>
@@ -13153,9 +13332,9 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="w3-bar w3-blue-grey">
-<a href="./01_access_cloud.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
-<a href="./001_introHPC.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
-<a href="./03_slurm.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
+<a href="./04_slurm.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
+<a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
+<a href="./06_software.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
 </div>
 </div>
 </div>

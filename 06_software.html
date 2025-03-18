@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>03_slurm</title>
+<title>06_software</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13094,7 +13094,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Slurm">Slurm<a class="anchor-link" href="#Slurm">&#182;</a></h1>
+<h1 id="Software">Software<a class="anchor-link" href="#Software">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13110,19 +13110,17 @@ div#notebook {
 </ul>
 <p><strong>Questions</strong></p>
 <ul>
-<li>What is a scheduler</li>
-<li>How can I use <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> to manage and run my jobs</li>
-<li>What <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> commands can I use to explore the system</li>
+<li>How do I access software?</li>
+<li>What libraries are available?</li>
+<li>How can I access different applications?</li>
+<li>What tools are there to help me?</li>
+<li>What application should I choose on each instance?</li>
 </ul>
 <p><strong>Objectives</strong></p>
 <ul>
-<li>Know that the scheduler manages jobs on the service</li>
-<li>Know how to interact with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> to:<ul>
-<li>see what jobs are running</li>
-<li>cancel jobs </li>
-<li>find out information about my jobs</li>
-</ul>
-</li>
+<li>Know that software on Nimbus is managed with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">module</code> and understand how to use it</li>
+<li>Know that software is collected into groups on different instances</li>
+<li>Know that software shouldnt be run on the login nodes</li>
 </ul>
 </div>
 </div>
@@ -13131,12 +13129,8 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Job-Scheduling">Job Scheduling<a class="anchor-link" href="#Job-Scheduling">&#182;</a></h1><p>An HPC system might have thousands of nodes and thousands of users. How do we decide who gets what and when? How do we ensure that a task is run with the resources it needs? This job is handled by a special piece of software called the scheduler. On an HPC system, the scheduler manages which jobs run where and when.</p>
-<p>The following illustration compares these tasks of a job scheduler to a waiter in a restaurant. If you can relate to an instance where you had to wait for a while in a queue to get in to a popular restaurant, then you may now understand why sometimes your jobs do not start instantly as in your laptop.</p>
-<p><img src="./images/restaurant_queue_manager.svg" alt="Scheduler"></p>
-<h2 id="Scheduler">Scheduler<a class="anchor-link" href="#Scheduler">&#182;</a></h2><p>Nimbus the cloud HPC service uses a scheduler to manage how jobs are run and resources are allocated.</p>
-<p>If multiple jobs ran on a single node at the same time users would be competing for the same resources and jobs take longer to run overall. A scheduler manages individual jobs, which are allocated to the resources they need as they become available. This results in a higher overall throughput and more consistent performance.</p>
-<p>The scheduler used by Nimbus is the same as that used by it's predecessor Balena, <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code>: _<strong>S</strong><em>imple </em><strong>L</strong><em>inux </em><strong>U</strong><em>tility for </em><strong>R</strong><em>esource </em><strong>M</strong>_anagment.</p>
+<h2 id="module"><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">module</code><a class="anchor-link" href="#module">&#182;</a></h2><p>On Nimbus <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">module</code> is used to manage different libraries and pieces of software.  Unlike you own machine where you likely have one set of up packages each running with the latest versions, on Nimbus there are many different applications each with different versions and libraries that they rely on.  Tools like module ensure researchers can access the versions of applications and libraries they want and allow the service to be managed more easily.  It also means that the correct dependencies, typically libraries that are used to compile applications, can be loaded automatically making life easier for users.</p>
+<p>You can check what modules are loaded when you first log-in to Nimbus:</p>
 
 </div>
 </div>
@@ -13144,62 +13138,74 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Slurm:-Simple-Linux-Utility-for-Resource-Managment">Slurm: Simple Linux Utility for Resource Managment<a class="anchor-link" href="#Slurm:-Simple-Linux-Utility-for-Resource-Managment">&#182;</a></h3><p>The scheduler on Nimbus is <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code>: _<strong>S</strong><em>imple </em><strong>L</strong><em>inux </em><strong>U</strong><em>tility for </em><strong>R</strong><em>esource </em><strong>M</strong>_anagment.</p>
-<p>Interacting with the scheduler is done through the terminal using an array of commands.</p>
-<p>Below are a number of key <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> commands:</p>
+<div class="highlight"><pre><span></span>module<span class="w"> </span>list
+</pre></div>
+<p><img src="./images/module_list.png" alt="storage"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can also run this command at any time to check which modules you have loaded or removed.
+By default only <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">gcc-9.2.0</code>, <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">mpi/openmpi</code>, <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">mkl/mkl-2021.1</code> are loaded.
+gcc provides the standard serial gnu compiler suite, openmpi is the contains the openmMPI MPI implementation with parallel mpi libraries and compiler wrappers and mkl is Intel's Math Kernel Library.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can see what modules are available with</p>
+<div class="highlight"><pre><span></span>module<span class="w"> </span>avail
+</pre></div>
+<p><img src="./images/module_avail.png" alt="storage"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The software modules will be updated as we build, test and broaden the software stack. Different modules are available depending on the instance type you wish to use. A combined list of all available modules built on the system is presented on the log-in node.</p>
+<p>The modules available in</p>
 <table>
 <thead><tr>
-<th>Slurm command</th>
-<th>Function</th>
+<th>File path</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sinfo</code></td>
-<td>View information about SLURM nodes and partitions</td>
+<td>/usr/share/Modules/modulefiles</td>
 </tr>
 <tr>
-<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">squeue</code></td>
-<td>List status of jobs in the <strong>queue</strong></td>
+<td>/apps/x86_64/modules/all</td>
 </tr>
 <tr>
-<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">squeue --user [userid]</code></td>
-<td>Jobs by user</td>
-</tr>
-<tr>
-<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">squeue --job [jobid]</code></td>
-<td>Jobs by jobid</td>
-</tr>
-<tr>
-<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sbatch [jobscript]</code></td>
-<td>Submit a jobscript to the scheduler</td>
-</tr>
-<tr>
-<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scancel [jobid]</code></td>
-<td>Cancel a job in the queue</td>
-</tr>
-<tr>
-<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol hold [jobid]</code></td>
-<td>Hold a job in the queue</td>
-</tr>
-<tr>
-<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol release [jobid]</code></td>
-<td>Release a held job</td>
-</tr>
-<tr>
-<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol show job [jobid]</code></td>
-<td>View information about a job</td>
-</tr>
-<tr>
-<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol show node nodename</code></td>
-<td>Get information of a node</td>
-</tr>
-<tr>
-<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol show license</code></td>
-<td>Get licenses available on SLURM</td>
+<td>/apps/modulefiles</td>
 </tr>
 </tbody>
 </table>
+<p>have not been compiled specifically for a particular compute instance, and are available and can be used on all instances.</p>
+<p>However the modules in</p>
+<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/apps/modules/</code></p>
+<p>are seperated out by build toolchain and are built for a specific instance. You can check if these modules are available on the instance of your choice with the following command:</p>
+<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">module check [instance_type] [module_name]</code></p>
+<p>where <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[instance_type]</code> and <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[module_name]</code> are the instance name and module you wish to check, e.g.:</p>
+
+<pre><code style="">$ module check fsv2 OpenFOAM
+ The following potential matches are available on the fsv2 instance:
+ match: OpenFOAM/v1812-foss-2020a
+ match: OpenFOAM/v2012-foss-2020a
+ match: OpenFOAM/9-foss-2021a
+ To load one of them include: `module load [module name]` in your run script e.g.:
+ module load OpenFOAM/v1812-foss-2020a</code></pre>
+<p>The <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[module_name]</code> you pass to this comand doesn't have to be exact (but the closer the argument you pass to the command is to the actual module name the better), and it will present you with a list of potential matches for the instance you are interested in. These modules cannot be loaded and used on the login-node, and rather should be included in your run-script e.g.:</p>
+
+<pre><code style="">module purge
+module load OpenFOAM/v1812-foss-2020a</code></pre>
 
 </div>
 </div>
@@ -13207,22 +13213,8 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="w3-panel w3-leftbar w3-border-green w3-pale-green w3-padding-small">
-    <h3 id="-Key-Points%3A%20"><i class="fa fa-key"></i> Key Points:
-</h3>
-    <ul>
-<li>We use a scheduler to manage jobs on the cloud HPC service</li>
-<li>Nimbus uses the slurm scheduler</li>
-<li>Key commands are:<ul>
-<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sbatch</code> to submit jobs</li>
-<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sinfo</code> to view information about the service</li>
-<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">squeue</code> to view the queue</li>
-<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scancel</code> to delete a job</li>
-</ul>
-</li>
-</ul>
-<p>You can find further information about slurm and the commands here: <a href="http://slurm.schedmd.com/">http://slurm.schedmd.com/</a></p>
-</div>
+<h2 id="Software-Install-Requests">Software Install Requests<a class="anchor-link" href="#Software-Install-Requests">&#182;</a></h2><p>You can request Software installs on the system by contacting <a href="mailto:it-hpc@bath.ac.uk">Research Computing</a>.<br></p>
+
 </div>
 </div>
 </div>
@@ -13237,9 +13229,9 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="w3-bar w3-blue-grey">
-<a href="./02_infrastructure.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
-<a href="./001_introHPC.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
-<a href="./04_compute_instances.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
+<a href="./05_compute_instances.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
+<a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
+<a href="./07_storage.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
 </div>
 </div>
 </div>

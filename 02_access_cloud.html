@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>001_introHPC</title>
+<title>02_access_cloud</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13094,7 +13094,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Introducing-High-Performance-Computing">Introducing High Performance Computing<a class="anchor-link" href="#Introducing-High-Performance-Computing">&#182;</a></h1>
+<h1 id="Accessing-Nimbus">Accessing Nimbus<a class="anchor-link" href="#Accessing-Nimbus">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13110,14 +13110,13 @@ div#notebook {
 </ul>
 <p><strong>Questions</strong></p>
 <ul>
-<li>Why would I be interested in High Performance Computing (HPC)?</li>
-<li>What can I expect to learn from this course?</li>
+<li>Where can I run the shell?</li>
+<li>What is Open on Demand?</li>
+<li>How do I connect to Nimbus</li>
 </ul>
 <p><strong>Objectives</strong></p>
 <ul>
-<li>Understand that HPC is a collection of computing resourcesto deliver higher performance than a single machine.</li>
-<li>Understand tha HPC can help you run your calculations more effieciently and more reliably.</li>
-<li>Identify how an HPC system could benefit you.</li>
+<li>Get access to the Nimbus in a terminal, either locally or through the Open On Demand service</li>
 </ul>
 </div>
 </div>
@@ -13126,15 +13125,15 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="What-is-HPC-and-why-is-it-different-to-using-your-desktop?">What is HPC and why is it different to using your desktop?<a class="anchor-link" href="#What-is-HPC-and-why-is-it-different-to-using-your-desktop?">&#182;</a></h3><p>“High Performance Computing most generally refers to the practice of aggregating computing power in a way that delivers much higher performance than one could get out of a typical desktop computer or workstation in order to solve large problems in science, engineering, or business.” - insideHPC</p>
-<p><img src="./images/balena-lights.jpg" alt="Balena"></p>
-<p>Lets consider seeveral research scenarios:</p>
+<p>This episode details how to access The University of Bath's Cloud HPC Facility: Nimbus</p>
+<p>We can access Nimbus in several ways:</p>
 <ul>
-<li>A statistics student wants to cross-validate a model. This involves running the model 1000 times – but each run takes an hour. Running the model on a laptop will take over a month! In this research problem, final results are calculated after all 1000 models have run, but typically only one model is run at a time (in serial) on the laptop. Since each of the 1000 runs is independent of all others, and given enough computers, it’s theoretically possible to run them all at once (in parallel).</li>
-<li>A genomics researcher has been using small datasets of sequence data, but soon will be receiving a new type of sequencing data that is 10 times as large. It’s already challenging to open the datasets on a computer – analyzing these larger datasets will probably crash it. In this research problem, the calculations required might be impossible to parallelize, but a computer with more memory would be required to analyze the much larger future data set.</li>
-<li>An engineer is using a fluid dynamics package that has an option to run in parallel. So far, this option was not used on a desktop. In going from 2D to 3D simulations, the simulation time has more than tripled. It might be useful to take advantage of that option or feature. In this research problem, the calculations in each region of the simulation are largely independent of calculations in other regions of the simulation. It’s possible to run each region’s calculations simultaneously (in parallel), communicate selected results to adjacent regions as needed, and repeat the calculations to converge on a final set of results. In moving from a 2D to a 3D model, both the amount of data and the amount of calculations increases greatly, and it’s theoretically possible to distribute the calculations across multiple computers communicating over a shared network.</li>
+<li>From the terminal on your local machine</li>
+<li>From the Open On Demand Service</li>
+<li>From an <a href="https://www.ssh.com/academy/ssh/client#:~:text=An%20SSH%20client%20is%20a,Windows%20and%20IBM%20z%2FOS.">ssh client on your local machine</a> </li>
 </ul>
-<p>In all these cases, access to more (and larger) computers is needed. Those computers should be usable at the same time, solving many researchers’ problems in parallel.</p>
+<p>Accessing the new cloud HPC service is through ssh (secure shell).</p>
+<p>For the purposes of this workshop you can access the terminal on your own machine, use an ssh client or we can use the the new Open on Demand service to access the Nimbus login nodes in the terminal.</p>
 
 </div>
 </div>
@@ -13142,27 +13141,13 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="PC-vs-HPC">PC vs HPC<a class="anchor-link" href="#PC-vs-HPC">&#182;</a></h2><p>Your PC is your local computing resource, good for small computational tasks. It is flexible, easy to set-up and configure for new tasks, though it has limited computational resources.</p>
-<p><img src="./images/pc.webp" alt="PC"></p>
-<p>Let’s dissect what resources programs running on a laptop require:</p>
-<ul>
-<li>the keyboard and/or touchpad is used to tell the computer what to do (Input)</li>
-<li>the internal computing resources Central Processing Unit (CPU_ and Memory are used to perform calculations the Screen Display depicts progress and results (Output) alternatvely, both input and output can be done using data stored on Disk or on a Network</li>
-<li>Schematically, this can be reduced to the following:</li>
-</ul>
-<p><img src="./images/Simple_Von_Neumann_Architecture.svg" alt="Balena"></p>
-<h3 id="If-Our-PC-isnt-Powerful-Enough?">If Our PC isnt Powerful Enough?<a class="anchor-link" href="#If-Our-PC-isnt-Powerful-Enough?">&#182;</a></h3><p>When the task to solve become heavy on computations, the operations are typically out-sourced from the local laptop or desktop to elsewhere. Take for example the task to find the directions for your next business trip. The capabilities of your laptop are typically not enough to calculate that route in real time, so you use a website, which in turn runs on a computer that is almost always a machine that is not in the same room as you are. Such a remote machine is generically called a server.</p>
-<p><img src="./images/servers-openclipartorg-ericlemerdy.svg" width="300" height="300"></p>
-<p>The internet made it possible for these data centers to be far remote from your laptop.</p>
-<p>The server itself has no direct display or input methods attached to it. But most importantly, it has much more storage, memory and compute capacity than your laptop will ever have. However, you still need a local device (laptop, workstation, mobile phone or tablet) to interact with this remote machine.</p>
-<h3 id="HPC-Cluster">HPC Cluster<a class="anchor-link" href="#HPC-Cluster">&#182;</a></h3><p>If the computational task or analysis to complete is daunting for a single server, larger agglomerations of servers are used. These go by the name of clusters or supercomputers.</p>
-<p>A HPC system is typically described as a cluster as it is made up of a <strong><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">cluster</code></strong> of computers, or compute nodes. Each individual compute node is typically a lot more powerful than any PC  - i.e. more memory, many more and faster CPU cores.</p>
-<p><img src="./images/compute_cluster.png" alt="Cluster"></p>
-<p>The methodology of providing the input data, communicating options and flags as well as retrieving the results is quite different to using a plain laptop. Moreover, using a GUI style interface is often discarded in favor of using the command line. This imposes a double paradigm shift for prospect users:</p>
-<ul>
-<li>they work with the command line (not a GUI style user interface)</li>
-<li>they work with a distributed set of computers (called nodes)</li>
-</ul>
+<h2 id="Getting-Started">Getting Started<a class="anchor-link" href="#Getting-Started">&#182;</a></h2><p>Bath's portfolio of Research Computing environments are open to all academics and doctoral students.</p>
+<p>Undergraduate students can also use the environments as part of their final year project.</p>
+<p>To use Nimbus, you must have funding and be assigned to a resource allocation within the <a href="https://rcam.bath.ac.uk/">Research Computing Account Management</a> (RCAM) portal.</p>
+<p>If you do not have grant funding available to use Nimbus, you must reach out to your <a href="https://www.bath.ac.uk/corporate-information/research-computing-champions.bho/">departmental champion</a> who will discuss your needs and assign you some funding from the departmental research computing budget, and arrange access through a resource allocation linked to the departmental RCAM account.</p>
+<p>If you have grant funding to use on Nimbus, you must <a href="https://www.bath.ac.uk/publications/research-computing-user-documentation/attachments.bho/hpc-budget-request-guide.pdf">first allocate this funding to HPC through Agresso</a>, then you must create an RCAM account on the RCAM portal using that Agresso code, finally you will be able to create resource allocations linked to that RCAM account and assign funding to yourself or other researchers. For more information on RCAM accounts and resource allocations visit the <a href="https://research-software-skills-bath.github.io/intro-portal/00_schedule.html">RCAM training material</a>.</p>
+<p>Once you are assigned to a resource allocation within the RCAM portal, your Bath credentials will be authorised to allow you to log in and use Nimbus.</p>
+<p><img src="./images/funding_routes.jpg" alt="funding_routes"></p>
 
 </div>
 </div>
@@ -13170,18 +13155,82 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Parallelisation">Parallelisation<a class="anchor-link" href="#Parallelisation">&#182;</a></h2><p>But how doe we use the resources on the cluster?</p>
-<p>Lets start with the idea of processing 1 input file  to generate 1 output (result) file. On a personal computer this would happen with a single core in the CPU.</p>
-<p><img src="./images/serial_hpc_crop.png" alt="serial"></p>
-<p>On a cluster we have access to many cores on a single node, so in theory we could split up the analysis of a single file into multiple distinct processes and use as many cores to speed up the generation of an output file. This is called multithreading, i.e. using multiple threads or cores.</p>
-<p><img src="./images/multithreaded_hpc.png" alt="multi"></p>
-<p>Now, what if we had 3 input files? Well, we could process these files in serial, i.e. use the same core(s) over and over again, as shown in the image below.</p>
-<p><img src="./images/multithreaded_hpc_3samples.png" alt="multi"></p>
-<p>This is great, but it is not as efficient as multithreading each analysis, and using a set of 8 cores for each of the three input samples. This is actually considered to be true parallelization.</p>
-<p><img src="./images/multithreaded_hpc.png" alt="multi"></p>
-<p>As we have already seen, the power of HPC systems comes from parallelism, i.e. having lots of processors/disks etc. connected together rather than having more powerful components than your laptop or workstation.</p>
-<p>Often, when running research programs on HPC you will need to run a program that has been built to use the MPI (Message Passing Interface) parallel library. The MPI library allows programs to exploit multiple processing cores in parallel to allow researchers to model or simulate faster on larger problem sizes. The details of how MPI work are not important for this course or even to use programs that have been built using MPI; however, MPI programs typically have to be launched in job submission scripts in a different way to serial programs and users of parallel programs on HPC systems need to know how to do this. Specifically, launching parallel MPI programs typically requires four things:</p>
+<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
+    <h3 id="-SSH%20"><i class="fa fa-info-circle"></i> SSH
+</h3>
+    <p>As HPC services are remote machines, interaction is done over an encrypted communication channel called Secure Shell version 2 (SSH-2). This allows command-line access to one of the login nodes of a HPC service, from which you can run commands or use a command-line text editor to edit files.</p>
+<h3 id="Security">Security<a class="anchor-link" href="#Security">&#182;</a></h3><p>Users and system operators have a shared responsibility to ensure the security of resources. System operators monitor the system, ensure security patches are up-to-date and that the systems is configured to restrict access correctly e.g. so that users cannot see each others data/files by default.</p>
+<p>Users should follow best practice to mitigate the risk of accounts and access details being compromised, e.g. we all know that we must keep our passwords secret. You shouldn't make your files accessible to others unless necessary.</p>
+<h3 id="Strong-passwords">Strong passwords<a class="anchor-link" href="#Strong-passwords">&#182;</a></h3><p>A strong password describes a password that is difficult to detect by both humans and computer programs, effectively protecting data from unauthorized access. A strong password consists of at least twelve characters (and the more characters, the stronger the password) that are a combination of letters, numbers and symbols  (@, !, &amp;, ^ etc) if allowed. Passwords are typically case-sensitive, so a strong password contains letters in both uppercase and lowercase. Strong passwords also do not contain words that can be found in a dictionary or parts of the user's own name.</p>
+<h3 id="SSH-key-pairs">SSH key pairs<a class="anchor-link" href="#SSH-key-pairs">&#182;</a></h3><p>An alternative to using a password is to use an ssh key-pair. A public key pair consists of two parts, a public part and a private part which are related. One is used to lock the message the other is used to unlock the message:</p>
+<ul>
+<li>The public part is used to lock (encrypt) the message so that it can be sent over the internet and can be shared.</li>
+<li>The private part is used to unlock (decrpyt) the message and should not be shared.</li>
+</ul>
+<h3 id="Set-up-a-key-pair">Set up a key pair<a class="anchor-link" href="#Set-up-a-key-pair">&#182;</a></h3><p>The SSH key pair consists of a private part and a public part. The public key can be put on remote machines to allow you to log-in without the use of a password. You keep the private part of the key secure on your local machine protected with a passphrase.</p>
+<p>Public key encryption uses fancy maths to enable secure communication over an open channel. There are a number of methods the most common being RSA) which uses prime numbers. If you are going to use this you should use a key size of at least 2048 and preferably 4096. Public keys can be broken with brute force computation and the longer the key the more secure it is.</p>
+<p>An alternative encryption method and the one we recommend you to use are based on EdDSA (Ed25519). For our purposes the key pair works in the same way. Your public key can go on the remote resource or service and the private key is kept protected on your local machine. You can generate a key pair with:</p>
+<p>ssh-keygen -o -a 100 -t ed25519</p>
+<ul>
+<li>ssh-keygen is the command to generate the key pair</li>
+<li>-o specifies to use a strong format to save the key</li>
+<li>-a 100 increases the strength of encryption with your passphrase</li>
+<li>-t ed25519 specifies the encryption method used</li>
+</ul>
+<p>When you create a SSH key pair you will be prompted to provide a passphrase. This is effectively password for your private key and like a password should be kept secret. Now when you try to use the key, you should be asked for your key pair passphase (which you entered when you created the key pair) rather than your remote machine password.</p>
+<p>Access to the HPC cloud service can be through key pairs, but <strong>ensure your key pair is protected by a passphrase</strong>.</p>
+<h3 id="More-details-on-ssh-and-security">More details on ssh and security<a class="anchor-link" href="#More-details-on-ssh-and-security">&#182;</a></h3><p>For further details on ssh, and security you can visit the Research Computing lesson:</p>
+<p><a href="https://arc-lessons.github.io/security/00_schedule.html">https://arc-lessons.github.io/security/00_schedule.html</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
+    <h3 id="-ssh-from-Windows-%26-Linux%2FMac%20"><i class="fa fa-info-circle"></i> ssh from Windows &amp; Linux/Mac
+</h3>
+    <p>In order to access Nimbus via ssh first connect to the <a href="https://www.bath.ac.uk/guides/setting-up-vpn-on-your-device/#setting-up-vpn">University of Bath VPN</a>.</p>
+<h3 id="Access-from-Windows">Access from Windows<a class="anchor-link" href="#Access-from-Windows">&#182;</a></h3><p>Recommended access via <a href="https://learn.microsoft.com/en-us/powershell/">Microsoft Powershell</a>, <a href="https://www.putty.org/">PuTTY</a> or <a href="https://mobaxterm.mobatek.net/">MobaXterm</a>.</p>
+<p>Alternatively you can install Windows Subsystem for Linux on your Windows machine and run a Linux distribution e.g: <a href="https://ubuntu.com/wsl">https://ubuntu.com/wsl</a>.</p>
+<p>To use the OpenSSH client on Windows to connect to Nimbus, simply open a PowerShell window or a command prompt window and run the ssh command:</p>
+<div class="highlight"><pre><span></span>ssh<span class="w"> </span>username@nimbus.hpc.bath.ac.uk
+</pre></div>
+<h3 id="Access-from-Linux/Mac:">Access from Linux/Mac:<a class="anchor-link" href="#Access-from-Linux/Mac:">&#182;</a></h3><p>Simply open a terminal and use the following command:</p>
+<div class="highlight"><pre><span></span>ssh<span class="w"> </span>username@nimbus.hpc.bath.ac.uk
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Open-on-Demand">Open on Demand<a class="anchor-link" href="#Open-on-Demand">&#182;</a></h2><p>Research Computing have set up a new way to access the University's HPC services using <a href="https://openondemand.org/">Open on Demand</a>. Open on Demand provides a web based portal to the University's HPC clusters, allowing users to create and monitor workloads, run GUI applications and connect via SSH.</p>
+<p>To log into the service open <a href="https://ood.hpc.bath.ac.uk">https://ood.hpc.bath.ac.uk</a> in your web browser and log in using your University credentials:</p>
+<p><img src="./images/ood_login.png" alt="OOD Login"></p>
+<p>The first time you log-on you will need to follow the following steps in order to create your home directory:</p>
+<p>Click the `Open Shell to create home directory:</p>
+<p><img src="./images/ood_home.png" alt="OOD Login"></p>
+<p>Type yes in the shell window:</p>
+<p><img src="./images/ood_connect.png" alt="OOD Login"></p>
+<p>Insert your university password:</p>
+<p><img src="./images/ood_connected.png" alt="OOD Login"></p>
+<p>Close the window and click <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">Restart web Server</code> in the original window:</p>
+<p><img src="./images/ood_restart.png" alt="OOD Login"></p>
+<p>To Open up an ssh session click <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">Clusters</code> at the top of the screen and in the drop down menu select <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&gt;_Nimbus HPC Shell Access</code>:</p>
+<p><img src="./images/ood_nimbus_shell_drop.png" alt="OOD Login"></p>
+<p>You will now have a secure shell connected to Nimbus open in a web based terminal hosted in the Open on Demand service:</p>
+<p><img src="./images/ood_ssh_session.png" alt="OOD Login"></p>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Congratulations:-You-are-now-in-the-Cloud!">Congratulations: You are now in the Cloud!<a class="anchor-link" href="#Congratulations:-You-are-now-in-the-Cloud!">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13192,10 +13241,8 @@ div#notebook {
     <h3 id="-Key-Points%3A%20"><i class="fa fa-key"></i> Key Points:
 </h3>
     <ul>
-<li>An HPC system is a set of networked machines.</li>
-<li>HPC systems typically provides login nodes and a set of worker compute nodes</li>
-<li>The resources found on independent (worker) nodes can vary in volume and type (amount of RAM, processor architecture, availability of network mounted file systems, etc.)</li>
-<li>The power of the HPC cluster can be harnassed with parallelism, using libraries such as MPI.</li>
+<li>We can access the Nimbus cluster via ssh to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">nimbus.hpc.bath.ac.uk</code></li>
+<li>Open on Demand can be used to get a secure shell session directly in your web browser</li>
 </ul>
 </div>
 </div>
@@ -13204,7 +13251,11 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-
+<div class="w3-bar w3-blue-grey">
+<a href="./01_introHPC.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
+<a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
+<a href="./03_infrastructure.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
+</div>
 </div>
 </div>
 </div>

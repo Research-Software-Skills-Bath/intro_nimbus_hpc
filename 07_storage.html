@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>01_access_cloud</title>
+<title>07_storage</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13094,7 +13094,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Accessing-Nimbus">Accessing Nimbus<a class="anchor-link" href="#Accessing-Nimbus">&#182;</a></h1>
+<h1 id="Storage">Storage<a class="anchor-link" href="#Storage">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13106,17 +13106,19 @@ div#notebook {
 </h3>
     <ul>
 <li><strong>Teaching:</strong> 10 min</li>
-<li><strong>Exercises:</strong> 0 min</li>
+<li><strong>Exercises:</strong> 2 min</li>
 </ul>
 <p><strong>Questions</strong></p>
 <ul>
-<li>Where can I run the shell?</li>
-<li>What is Open on Demand?</li>
-<li>How do I connect to Nimbus</li>
+<li>What storage is available on Nimbus?</li>
+<li>How does this affect my workflow?</li>
+<li>Where should I keep my data?</li>
 </ul>
 <p><strong>Objectives</strong></p>
 <ul>
-<li>Get access to the Nimbus in a terminal, either locally or through the Open On Demand service</li>
+<li>Understand the storage structure of the new system.</li>
+<li>Know where to keep your data, and how to stage data for runs.</li>
+<li>Understand the costs associated with storage.</li>
 </ul>
 </div>
 </div>
@@ -13125,15 +13127,29 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>This episode details how to access The University of Bath's Cloud HPC Facility: Nimbus</p>
-<p>We can access Nimbus in several ways:</p>
+<h2 id="Filesystem-on-Nimbus">Filesystem on Nimbus<a class="anchor-link" href="#Filesystem-on-Nimbus">&#182;</a></h2><p>The filesystem on Nimbus, the University of Bath's Cloud HPC facility, has the following layout:</p>
+<p><img src="./images/storage.png" alt="storage"></p>
+<p>The areas of the filesystem you should know about are:</p>
 <ul>
-<li>From the terminal on your local machine</li>
-<li>From the Open On Demand Service</li>
-<li>From an <a href="https://www.ssh.com/academy/ssh/client#:~:text=An%20SSH%20client%20is%20a,Windows%20and%20IBM%20z%2FOS.">ssh client on your local machine</a> </li>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/shared/home</code>: 2TB Azure Managed Disk. Each user is given a home folder, with a strict quota of 5GB. You can check your quota usage with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">quota -s</code>. This area can be accessed from both the login and compute nodes. This disk is backed up daily, and could be used for storing e.g.:</p>
+<ul>
+<li>Code/scripts for your calculations</li>
+<li>Template jobscripts</li>
 </ul>
-<p>Accessing the new cloud HPC service is through ssh (secure shell).</p>
-<p>For the purposes of this workshop you can access the terminal on your own machine, use an ssh client or we can use the the new Open on Demand service to access the Nimbus login nodes in the terminal.</p>
+</li>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code>: each resource allocation has an associated campaign storage area located at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/&lt;resource_allocation_id&gt;</code>. The quota for this disk space is set to 50GB for each account (account admins can allocate this to each Resource Allocation in the research computing account management portal). <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">campaign</code> is where you would keep files required for a current project thrust. This is not designed for long-term archival storage, and data should regularly be moved out of this area. Campaign storage is a resizable logical file system based on logical volume management (LVM). The file systems are created in multiple managed disks. Initially we have one 16TB disk, which can be increased to 64TB, with the ability to add more disks.</p>
+</li>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/apps/</code>: 1TB Azure managed Disk. This space contains centrally compiled software for use of users.</p>
+</li>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/u/</code>: The University <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">H</code> drive is mounted and can be accessed from the login nodes only.</p>
+</li>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code>: Some compute instances have fast local storage located in this area, only accessible from the compute node. e.g. HBv3 (450GB), HBv2(450GB), HB(450GB), HC44(650GB). Your jobs should be run here on the compute node in the first instance. Any files copied here or created will be cleaned up at the end of the job.</p>
+</li>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/burstbuffer/*/</code>: when running a job on a compute node if your data will not fit in the fast local storage <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource</code> you can access one of 26 blob stores in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/burstbuffer/*/</code>. An environment variable <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> is made available in the environment when running a job, and the job specific burstbuffer gets destroyed at the end of the job. You can use this space to store temporary files that are needed during a job run, bu not afterwards. e.g. by staging your input data in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code>, running your job there, and then only copying the outputs you require back to either <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign</code> or <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/home/</code>. The blob performance is 60 GBps shared by jobs running on each blob store (allocated in a round robin fashion).</p>
+</li>
+<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/x/</code>: The parts of the University Research x-drive that are able to be mounted on the cluster can be found here.</p>
+</li>
+</ul>
 
 </div>
 </div>
@@ -13141,13 +13157,10 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Getting-Started">Getting Started<a class="anchor-link" href="#Getting-Started">&#182;</a></h2><p>Bath's portfolio of Research Computing environments are open to all academics and doctoral students.</p>
-<p>Undergraduate students can also use the environments as part of their final year project.</p>
-<p>To use Nimbus, you must have funding and be assigned to a resource allocation within the <a href="https://rcam.bath.ac.uk/">Research Computing Account Management</a> (RCAM) portal.</p>
-<p>If you do not have grant funding available to use Nimbus, you must reach out to your <a href="https://www.bath.ac.uk/corporate-information/research-computing-champions.bho/">departmental champion</a> who will discuss your needs and assign you some funding from the departmental research computing budget, and arrange access through a resource allocation linked to the departmental RCAM account.</p>
-<p>If you have grant funding to use on Nimbus, you must <a href="https://www.bath.ac.uk/publications/research-computing-user-documentation/attachments.bho/hpc-budget-request-guide.pdf">first allocate this funding to HPC through Agresso</a>, then you must create an RCAM account on the RCAM portal using that Agresso code, finally you will be able to create resource allocations linked to that RCAM account and assign funding to yourself or other researchers. For more information on RCAM accounts and resource allocations visit the <a href="https://research-software-skills-bath.github.io/intro-portal/00_schedule.html">RCAM training material</a>.</p>
-<p>Once you are assigned to a resource allocation within the RCAM portal, your Bath credentials will be authorised to allow you to log in and use Nimbus.</p>
-<p><img src="./images/funding_routes.jpg" alt="funding_routes"></p>
+<h3 id="Environment-Variables">Environment Variables<a class="anchor-link" href="#Environment-Variables">&#182;</a></h3><p>There are several environment variables to help you navigate the filesystem.</p>
+<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$HOME</code> = /shared/home/<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&lt;username&gt;</code>: your home directory</p>
+<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BUCSHOME</code> = /u/u/<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&lt;username&gt;</code>: your University <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">H</code> folder</p>
+<p>*<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> = /burstbuffer/[a-z]/<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&lt;slurm_job_id&gt;</code>: burst buffer blob store for use during job</p>
 
 </div>
 </div>
@@ -13155,50 +13168,13 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
-    <h3 id="-SSH%20"><i class="fa fa-info-circle"></i> SSH
+<div class="w3-panel w3-leftbar w3-border-yellow w3-pale-yellow w3-padding-small">
+    <h3 id="-Try-these-commands%20"><i class="fa fa-pencil-square-o"></i> Try these commands
 </h3>
-    <p>As HPC services are remote machines, interaction is done over an encrypted communication channel called Secure Shell version 2 (SSH-2). This allows command-line access to one of the login nodes of a HPC service, from which you can run commands or use a command-line text editor to edit files.</p>
-<h3 id="Security">Security<a class="anchor-link" href="#Security">&#182;</a></h3><p>Users and system operators have a shared responsibility to ensure the security of resources. System operators monitor the system, ensure security patches are up-to-date and that the systems is configured to restrict access correctly e.g. so that users cannot see each others data/files by default.</p>
-<p>Users should follow best practice to mitigate the risk of accounts and access details being compromised, e.g. we all know that we must keep our passwords secret. You shouldn't make your files accessible to others unless necessary.</p>
-<h3 id="Strong-passwords">Strong passwords<a class="anchor-link" href="#Strong-passwords">&#182;</a></h3><p>A strong password describes a password that is difficult to detect by both humans and computer programs, effectively protecting data from unauthorized access. A strong password consists of at least twelve characters (and the more characters, the stronger the password) that are a combination of letters, numbers and symbols  (@, !, &amp;, ^ etc) if allowed. Passwords are typically case-sensitive, so a strong password contains letters in both uppercase and lowercase. Strong passwords also do not contain words that can be found in a dictionary or parts of the user's own name.</p>
-<h3 id="SSH-key-pairs">SSH key pairs<a class="anchor-link" href="#SSH-key-pairs">&#182;</a></h3><p>An alternative to using a password is to use an ssh key-pair. A public key pair consists of two parts, a public part and a private part which are related. One is used to lock the message the other is used to unlock the message:</p>
-<ul>
-<li>The public part is used to lock (encrypt) the message so that it can be sent over the internet and can be shared.</li>
-<li>The private part is used to unlock (decrpyt) the message and should not be shared.</li>
-</ul>
-<h3 id="Set-up-a-key-pair">Set up a key pair<a class="anchor-link" href="#Set-up-a-key-pair">&#182;</a></h3><p>The SSH key pair consists of a private part and a public part. The public key can be put on remote machines to allow you to log-in without the use of a password. You keep the private part of the key secure on your local machine protected with a passphrase.</p>
-<p>Public key encryption uses fancy maths to enable secure communication over an open channel. There are a number of methods the most common being RSA) which uses prime numbers. If you are going to use this you should use a key size of at least 2048 and preferably 4096. Public keys can be broken with brute force computation and the longer the key the more secure it is.</p>
-<p>An alternative encryption method and the one we recommend you to use are based on EdDSA (Ed25519). For our purposes the key pair works in the same way. Your public key can go on the remote resource or service and the private key is kept protected on your local machine. You can generate a key pair with:</p>
-<p>ssh-keygen -o -a 100 -t ed25519</p>
-<ul>
-<li>ssh-keygen is the command to generate the key pair</li>
-<li>-o specifies to use a strong format to save the key</li>
-<li>-a 100 increases the strength of encryption with your passphrase</li>
-<li>-t ed25519 specifies the encryption method used</li>
-</ul>
-<p>When you create a SSH key pair you will be prompted to provide a passphrase. This is effectively password for your private key and like a password should be kept secret. Now when you try to use the key, you should be asked for your key pair passphase (which you entered when you created the key pair) rather than your remote machine password.</p>
-<p>Access to the HPC cloud service can be through key pairs, but <strong>ensure your key pair is protected by a passphrase</strong>.</p>
-<h3 id="More-details-on-ssh-and-security">More details on ssh and security<a class="anchor-link" href="#More-details-on-ssh-and-security">&#182;</a></h3><p>For further details on ssh, and security you can visit the Research Computing lesson:</p>
-<p><a href="https://arc-lessons.github.io/security/00_schedule.html">https://arc-lessons.github.io/security/00_schedule.html</a></p>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
-    <h3 id="-ssh-from-Windows-%26-Linux%2FMac%20"><i class="fa fa-info-circle"></i> ssh from Windows &amp; Linux/Mac
-</h3>
-    <p>In order to access Nimbus via ssh first connect to the <a href="https://www.bath.ac.uk/guides/setting-up-vpn-on-your-device/#setting-up-vpn">University of Bath VPN</a>.</p>
-<h3 id="Access-from-Windows">Access from Windows<a class="anchor-link" href="#Access-from-Windows">&#182;</a></h3><p>Recommended access via <a href="https://learn.microsoft.com/en-us/powershell/">Microsoft Powershell</a>, <a href="https://www.putty.org/">PuTTY</a> or <a href="https://mobaxterm.mobatek.net/">MobaXterm</a>.</p>
-<p>Alternatively you can install Windows Subsystem for Linux on your Windows machine and run a Linux distribution e.g: <a href="https://ubuntu.com/wsl">https://ubuntu.com/wsl</a>.</p>
-<p>To use the OpenSSH client on Windows to connect to Nimbus, simply open a PowerShell window or a command prompt window and run the ssh command:</p>
-<div class="highlight"><pre><span></span>ssh<span class="w"> </span>username@nimbus.hpc.bath.ac.uk
-</pre></div>
-<h3 id="Access-from-Linux/Mac:">Access from Linux/Mac:<a class="anchor-link" href="#Access-from-Linux/Mac:">&#182;</a></h3><p>Simply open a terminal and use the following command:</p>
-<div class="highlight"><pre><span></span>ssh<span class="w"> </span>username@nimbus.hpc.bath.ac.uk
+    <div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="nv">$HOME</span>
+<span class="nb">echo</span><span class="w"> </span><span class="nv">$BUCSHOME</span>
+<span class="nb">cd</span><span class="w"> </span><span class="nv">$BUCSHOME</span>
+<span class="nb">pwd</span>
 </pre></div>
 </div>
 </div>
@@ -13207,30 +13183,21 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Open-on-Demand">Open on Demand<a class="anchor-link" href="#Open-on-Demand">&#182;</a></h2><p>Research Computing have set up a new way to access the University's HPC services using <a href="https://openondemand.org/">Open on Demand</a>. Open on Demand provides a web based portal to the University's HPC clusters, allowing users to create and monitor workloads, run GUI applications and connect via SSH.</p>
-<p>To log into the service open <a href="https://ood.hpc.bath.ac.uk">https://ood.hpc.bath.ac.uk</a> in your web browser and log in using your University credentials:</p>
-<p><img src="./images/ood_login.png" alt="OOD Login"></p>
-<p>The first time you log-on you will need to follow the following steps in order to create your home directory:</p>
-<p>Click the `Open Shell to create home directory:</p>
-<p><img src="./images/ood_home.png" alt="OOD Login"></p>
-<p>Type yes in the shell window:</p>
-<p><img src="./images/ood_connect.png" alt="OOD Login"></p>
-<p>Insert your university password:</p>
-<p><img src="./images/ood_connected.png" alt="OOD Login"></p>
-<p>Close the window and click <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">Restart web Server</code> in the original window:</p>
-<p><img src="./images/ood_restart.png" alt="OOD Login"></p>
-<p>To Open up an ssh session click <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">Clusters</code> at the top of the screen and in the drop down menu select <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&gt;_Nimbus HPC Shell Access</code>:</p>
-<p><img src="./images/ood_nimbus_shell_drop.png" alt="OOD Login"></p>
-<p>You will now have a secure shell connected to Nimbus open in a web based terminal hosted in the Open on Demand service:</p>
-<p><img src="./images/ood_ssh_session.png" alt="OOD Login"></p>
-
+<div class="w3-panel w3-leftbar w3-border-yellow w3-pale-yellow w3-padding-small">
+    <h3 id="-Go-home%20"><i class="fa fa-pencil-square-o"></i> Go home
+</h3>
+    <p>How can we use the environment variables we've used above to return to our <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">home</code> directory?</p>
+<p><a href="./07_storage-soln.html#-Go-home%20">Solution</a></p>
+</div>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Congratulations:-You-are-now-in-the-Cloud!">Congratulations: You are now in the Cloud!<a class="anchor-link" href="#Congratulations:-You-are-now-in-the-Cloud!">&#182;</a></h1>
+<h2 id="Storage-Costs">Storage Costs<a class="anchor-link" href="#Storage-Costs">&#182;</a></h2><p>Currently storage will not be charged, until a low cost tier three storage option is in place. At which point campaign storage will be charged, and account administrators will be able to allocate campaign storage, see usage and storage transactions in the research computing account management portal.</p>
+<p>Although, we would encourage users to get into the habit of moving data around as a fundamental part of their workflow in order to optimise their own costs, and make most efficient use of the storage options available.</p>
+
 </div>
 </div>
 </div>
@@ -13241,8 +13208,13 @@ div#notebook {
     <h3 id="-Key-Points%3A%20"><i class="fa fa-key"></i> Key Points:
 </h3>
     <ul>
-<li>We can access the Nimbus cluster via ssh to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">nimbus.hpc.bath.ac.uk</code></li>
-<li>Open on Demand can be used to get a secure shell session directly in your web browser</li>
+<li>There are different storage areas on the Nimbus system.</li>
+<li><strong>Only</strong> your <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/home/</code> area is backed up.</li>
+<li>Data required for your current project workflow should be kept in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code>.</li>
+<li>For some instance types you can use fast local storage at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code> - <strong>make sure to copy any data you want back to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">campaign</code></strong>.</li>
+<li>If your data will not fit in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/mnt/resource/</code> you can use <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code>, is an environment variable pointing to temporary storage that can be used throughout the duration of your job  - <strong>make sure to copy any data you want back to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">campaign</code></strong>. </li>
+<li>You can use environment variables to navigate the filesystem.</li>
+<li>Storage is currently not being charged, but will be in the future, so getting into good habits with respect to data management (and encouraging others to do the same) is certainly a good idea.</li>
 </ul>
 </div>
 </div>
@@ -13251,10 +13223,24 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <div class="w3-bar w3-blue-grey">
-<a href="./00_schedule.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
-<a href="./001_introHPC.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
-<a href="./02_infrastructure.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
+<a href="./06_software.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
+<a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
+<a href="./08_transferring_files.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
 </div>
 </div>
 </div>
