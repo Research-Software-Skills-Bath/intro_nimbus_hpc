@@ -13134,7 +13134,7 @@ div#notebook {
 <p>In order to list the partitions issue the following command:</p>
 <p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sinfo</code></p>
 <p>which will list the partitions, the nodes in the partitions, availability and the current state:</p>
-<p><img src="./images/nimbus_partitions.png" alt="linux-login"></p>
+<p><img src="./images/sinfo_new.png" alt="linux-login"></p>
 <p>The partitions follow a naming converntion</p>
 <p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[pricing tier]-[instance type]-[no of cpus-per-node]</code></p>
 <p>So, for example the partition <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">spot-hbv3-120</code> is for spot priced hbv3 instances with 120 CPUs per node, while <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">paygo-hc-44</code> is for pay-as-you-go priced hc instances with 44 CPUs per node.</p>
@@ -13160,13 +13160,6 @@ div#notebook {
 <td>fsv2</td>
 <td>Intel Skylake</td>
 <td>2,4,8,16,32,48,64,72</td>
-<td>-</td>
-<td>-</td>
-</tr>
-<tr>
-<td>hb</td>
-<td>AMD Epyc Naples</td>
-<td>60</td>
 <td>-</td>
 <td>-</td>
 </tr>
@@ -13250,7 +13243,7 @@ div#notebook {
 <h3 id="Choosing-the-right-instance">Choosing the right instance<a class="anchor-link" href="#Choosing-the-right-instance">&#182;</a></h3><p>Azure offers a range of virtual machines (VMs) optimized for both CPU and GPU-intensive workloads. Choosing the correct compute instance and partition will depend primarily on your specific scientific research requirements such as workload you are running, and will depend on cost, runtime and whether an interruption is acceptable (more on that in spot vs pay-as-you-go).</p>
 <p>The instance types currently available in Nimbus:</p>
 <ul>
-<li><strong>High performance compute</strong>: hb, hbv2, hbv3 &amp; hc series</li>
+<li><strong>High performance compute</strong>: hbv2, hbv3 &amp; hc series</li>
 <li><strong>GPU enabled</strong>: ncv3, ncv3r, &amp; ndv2</li>
 <li><strong>Compute Optimised</strong>: fsv2</li>
 </ul>
