@@ -1,384 +1,174 @@
 {
-
  "cells": [
-
   {
-
    "cell_type": "markdown",
-
    "metadata": {},
-
-
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
    "source": [
-
-
     "# Transferring Files\n",
-
-
     "\n",
-
-
     "## Overview:\n",
-
-
     "\n",
-
-
     "- **Teaching:** 10 min\n",
-
-
     "\n",
-
-
     "**Questions**\n",
-
-
     "- How do I get files onto and off a HPC system?\n",
-
-
     "\n",
-
-
     "**Objectives**\n",
-
-
     "- Be able to move your files to and from a HPC cluster\n",
-
-
     "\n"
-
-
    ]
-
-  },
-
-  {
-
-   "cell_type": "markdown",
-
-   "metadata": {},
-
    "source": [
-
     "## Transferring files\n",
-
     "\n",
-
     "Computing with a remote computer offers very limited use if we cannot get files to or from the cluster. There are several options for transferring data between computing resources, from command line options to GUI programs, which we will cover here.\n",
-
     "\n",
-
     "## Download files from the internet using wget\n",
-
     "\n",
-
     "One of the most straightforward ways to download files is to use wget. Any file that can be downloaded in your web browser with an accessible link can be downloaded using wget. This is a quick way to download datasets or source code.\n",
-
     "\n",
-
     "The syntax is: wget https://some/link/to/a/file.tar.gz. For example, download an example file with the following command:\n",
-
     "\n",
-
     "```bash\n",
-
     "nimbus-user: wget https://download.mozilla.org/?product=firefox-latest-ssl&os=linux64&lang=en-US -O firefox.tar.bz2\n",
-
     "```\n",
-
     "\n",
-
     "Chek the file was indeed downloaded: \n",
-
     "\n",
-
     "```bash\n",
-
     "nimbus-user:$ls\n",
-
     "firefox.tar.bz2 \n",
-
     "```\n",
-
     "\n",
-
     "And then lets clean it up:\n",
-
     "\n",
-
     "```bash\n",
-
     "nimbus-user:$ rm firefox.tar.bz2 \n",
-
     "```"
-
    ]
-
   },
-
   {
-
    "cell_type": "markdown",
-
    "metadata": {},
-
    "source": [
-
     "## Transferring single files and folders with scp\n",
-
     "\n",
-
     "To copy a single file to or from the cluster, we can use `scp`. The syntax can be a little complex for new users, but we’ll break it down here:\n",
-
     "\n",
-
     "To transfer to another computer:\n",
-
     "\n",
-
     "```bash\n",
-
     "user@laptop:~$ scp /path/to/local/file.txt userid@nimbus.hpc.bath.ac.uk:/path/on/remote/computer\n",
-
     "```\n",
-
     "\n",
-
     "To download from another computer:\n",
-
     "\n",
-
     "```bash\n",
-
     "user@laptop:~$ scp userid@nimbus.hpc.bath.ac.uk:/path/on/remote/computer/file.txt /path/to/local/\n",
-
     "```\n",
-
     "\n",
-
     "Note that we can simplify doing this by shortening our paths. On the remote computer, everything after the : is relative to our home directory. We can simply just add a : and leave it at that if we don’t care where the file goes.\n",
-
     "\n",
-
     "```bash\n",
-
     "user@laptop:~$ scp local-file.txt userid@nimbus.hpc.bath.ac.uk:\n",
-
     "```\n",
-
     "\n",
-
     "To recursively copy a directory, we just add the -r (recursive) flag:\n",
-
     "\n",
-
     "```bash\n",
-
     "user@laptop:~$ scp -r some-local-folder/ userid@nimbus.hpc.bath.ac.uk:target-directory/\n",
-
     "```\n"
-
    ]
-
   },
-
   {
-
    "cell_type": "markdown",
-
    "metadata": {},
-
-
    "source": [
-
-
-    "## Exercise: Transfer a file\n",
-
-
-    "\n",
-
-
-    "Open a terminal on your system and try using the scp command to send a file to nimbus."
-
-
-   ]
-
-  },
-
-  {
-
-   "cell_type": "markdown",
-
-   "metadata": {},
-
-   "source": [
-
     "## rsync \n",
-
     "\n",
-
     "As you gain experience with transferring files, you may find the scp command limiting. The rsync utility provides advanced features for file transfer and is typically faster compared to both scp and sftp (see below). It is especially useful for transferring large and/or many files and creating synced backup folders.\n",
-
     "\n",
-
     "The syntax is similar to scp. To transfer to another computer with commonly used options:\n",
-
     "\n",
-
     "```bash\n",
-
     "[local]$ rsync -avzP /path/to/local/file.txt userid@nimbus.hpc.bath.ac.uk:/path/on/remote/computer\n",
-
     "```\n",
-
     "\n",
-
     "The a (archive) option preserves file timestamps and permissions among other things; the v (verbose) option gives verbose output to help monitor the transfer; the z (compression) option compresses the file during transit to reduce size and transfer time; and the P (partial/progress) option preserves partially transferred files in case of an interruption and also displays the progress of the transfer.\n",
-
     "\n",
-
     "To recursively copy a directory, we can use the same options:\n",
-
     "\n",
-
     "```bash\n",
-
     "[local]$ rsync -avzP /path/to/local/dir userid@nimbus.hpc.bath.ac.uk:/path/on/remote/computer\n",
-
     "```\n",
-
     "\n",
-
     "The a (archive) option implies recursion.\n",
-
     "\n",
-
     "To download a file, we simply change the source and destination:\n",
-
     "\n",
-
     "```bash\n",
-
     "[local]$ rsync -avzP userid@nimbus.hpc.bath.ac.uk:/path/on/remote/computer/file.txt /path/to/local/\n",
-
     "```\n",
-
     "\n",
-
     "\n",
-
     "\n",
-
     "\n"
-
    ]
-
   },
-
   {
-
    "cell_type": "markdown",
-
    "metadata": {},
-
    "source": [
-
     "## Transferring files interactively with FileZilla (sftp)\n",
-
     "\n",
-
     "FileZilla is a cross-platform client for downloading and uploading files to and from a remote computer. It is absolutely fool-proof and always works quite well. It uses the sftp protocol. You can read more about using the sftp protocol in the command line here.\n",
-
     "\n",
-
     "Download and install the FileZilla client from https://filezilla-project.org. After installing and opening the program, you should end up with a window with a file browser of your local system on the left hand side of the screen. When you connect to the cluster, your cluster files will appear on the right hand side.\n",
-
     "\n",
-
     "To connect to the cluster, we’ll just need to enter our credentials at the top of the screen:\n",
-
     "\n",
-
     "- Host: sftp://nimbus.hpc.bath.ac.uk\n",
-
     "- User: Your cluster username\n",
-
     "- Password: Your cluster password\n",
-
     "- Port: (leave blank to use the default port)\n",
-
     "\n",
-
     "Hit “Quickconnect” to connect! You should see your remote files appear on the right hand side of the screen. You can drag-and-drop files between the left (local) and right (remote) sides of the screen to transfer files."
-
    ]
-
   },
-
   {
-
    "cell_type": "markdown",
-
    "metadata": {},
-
    "source": [
-
     "## Key Points\n",
-
     "\n",
-
     "- `wget` downloads a file from the internet.\n",
-
     "- `scp` transfer files to and from your computer.\n",
-
     "- You can use an SFTP client like FileZilla to transfer files through a GUI.\n"
-
    ]
-
   }
-
  ],
-
  "metadata": {
-
   "kernelspec": {
-
    "display_name": "Python 3 (ipykernel)",
-
    "language": "python",
-
    "name": "python3"
-
   },
-
   "language_info": {
-
    "codemirror_mode": {
-
     "name": "ipython",
-
     "version": 3
-
    },
-
    "file_extension": ".py",
-
    "mimetype": "text/x-python",
-
    "name": "python",
-
    "nbconvert_exporter": "python",
-
    "pygments_lexer": "ipython3",
-
    "version": "3.9.12"
-
   }
-
  },
-
  "nbformat": 4,
-
  "nbformat_minor": 2
-
 }
