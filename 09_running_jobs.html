@@ -13157,7 +13157,10 @@ div#notebook {
 <span class="c1">#SBATCH --qos=spot-fsv2-1</span>
 <span class="c1">#SBATCH --time=00:01:00</span>
 
-<span class="c1"># Load Modules</span>
+<span class="c1">#Identify node correctly</span>
+<span class="nb">source</span><span class="w"> </span>/apps/build/easy_build/scripts/id_instance.sh
+<span class="nb">source</span><span class="w"> </span>/apps/build/easy_build/scripts/setup_modules.sh
+
 module<span class="w"> </span>purge
 module<span class="w"> </span>load<span class="w"> </span>Python/3.9.5-GCCcore-10.3.0
 
