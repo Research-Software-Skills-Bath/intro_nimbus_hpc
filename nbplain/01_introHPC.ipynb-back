@@ -18,12 +18,11 @@
      "slide_type": "slide"
     }
    },
-
-
-
    "source": [
     "## Overview:\n",
     "\n",
+    "- **Teaching:** 10 min\n",
+    "- **Exercises:** 0 min\n",
     "\n",
     "**Questions**\n",
     "- Why would I be interested in High Performance Computing (HPC)?\n",
@@ -34,10 +33,6 @@
     "- Understand tha HPC can help you run your calculations more effieciently and more reliably.\n",
     "- Identify how an HPC system could benefit you."
    ]
-
-
-
-
   },
   {
    "cell_type": "markdown",
