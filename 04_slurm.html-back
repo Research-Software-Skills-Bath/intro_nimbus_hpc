@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>05_compute_instances</title>
+<title>04_slurm</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13094,7 +13094,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Compute-Instances">Compute Instances<a class="anchor-link" href="#Compute-Instances">&#182;</a></h1>
+<h1 id="Slurm">Slurm<a class="anchor-link" href="#Slurm">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13110,18 +13110,19 @@ div#notebook {
 </ul>
 <p><strong>Questions</strong></p>
 <ul>
-<li>What compute instances are available?</li>
-<li>How do I choose the right instance?</li>
-<li>What do these cost?</li>
-<li>How do I see the partitions?</li>
-<li>What is spot and Pay as you Go?</li>
+<li>What is a scheduler</li>
+<li>How can I use <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> to manage and run my jobs</li>
+<li>What <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> commands can I use to explore the system</li>
 </ul>
 <p><strong>Objectives</strong></p>
 <ul>
-<li>Understand what compute instances are currently available</li>
-<li>Know where to get information on the compute instances, including costs</li>
-<li>Understand the difference between spot and pay-as-you-go</li>
-<li>Know which instance to use for your code</li>
+<li>Know that the scheduler manages jobs on the service</li>
+<li>Know how to interact with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> to:<ul>
+<li>see what jobs are running</li>
+<li>cancel jobs </li>
+<li>find out information about my jobs</li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -13130,14 +13131,12 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Slurm-partitions">Slurm partitions<a class="anchor-link" href="#Slurm-partitions">&#182;</a></h2><p>The new hpc service Nimbus provides user access to an array of different compute instances. These instances are accessed through different slurm partitions.</p>
-<p>In order to list the partitions issue the following command:</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sinfo</code></p>
-<p>which will list the partitions, the nodes in the partitions, availability and the current state:</p>
-<p><img src="./images/sinfo_new.png" alt="linux-login"></p>
-<p>The partitions follow a naming converntion</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[pricing tier]-[instance type]-[no of cpus-per-node]</code></p>
-<p>So, for example the partition <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">spot-hbv3-120</code> is for spot priced hbv3 instances with 120 CPUs per node, while <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">paygo-hc-44</code> is for pay-as-you-go priced hc instances with 44 CPUs per node.</p>
+<h1 id="Job-Scheduling">Job Scheduling<a class="anchor-link" href="#Job-Scheduling">&#182;</a></h1><p>An HPC system might have thousands of nodes and thousands of users. How do we decide who gets what and when? How do we ensure that a task is run with the resources it needs? This job is handled by a special piece of software called the scheduler. On an HPC system, the scheduler manages which jobs run where and when.</p>
+<p>The following illustration compares these tasks of a job scheduler to a waiter in a restaurant. If you can relate to an instance where you had to wait for a while in a queue to get in to a popular restaurant, then you may now understand why sometimes your jobs do not start instantly as in your laptop.</p>
+<p><img src="./images/restaurant_queue_manager.svg" alt="Scheduler"></p>
+<h2 id="Scheduler">Scheduler<a class="anchor-link" href="#Scheduler">&#182;</a></h2><p>Nimbus the cloud HPC service uses a scheduler to manage how jobs are run and resources are allocated.</p>
+<p>If multiple jobs ran on a single node at the same time users would be competing for the same resources and jobs take longer to run overall. A scheduler manages individual jobs, which are allocated to the resources they need as they become available. This results in a higher overall throughput and more consistent performance.</p>
+<p>The scheduler used by Nimbus is the same as that used by it's predecessor Balena, <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code>: _<strong>S</strong><em>imple </em><strong>L</strong><em>inux </em><strong>U</strong><em>tility for </em><strong>R</strong><em>esource </em><strong>M</strong>_anagment.</p>
 
 </div>
 </div>
@@ -13145,162 +13144,62 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Compute-Instances">Compute Instances<a class="anchor-link" href="#Compute-Instances">&#182;</a></h2><p>The instance types currently available are listed below:</p>
+<h3 id="Slurm:-Simple-Linux-Utility-for-Resource-Managment">Slurm: Simple Linux Utility for Resource Managment<a class="anchor-link" href="#Slurm:-Simple-Linux-Utility-for-Resource-Managment">&#182;</a></h3><p>The scheduler on Nimbus is <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code>: _<strong>S</strong><em>imple </em><strong>L</strong><em>inux </em><strong>U</strong><em>tility for </em><strong>R</strong><em>esource </em><strong>M</strong>_anagment.</p>
+<p>Interacting with the scheduler is done through the terminal using an array of commands.</p>
+<p>Below are a number of key <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">slurm</code> commands:</p>
 <table>
 <thead><tr>
-<th>Instance type</th>
-<th>CPU model</th>
-<th>vCPUS</th>
-<th>GPU model</th>
-<th>vGPUS</th>
+<th>Slurm command</th>
+<th>Function</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>fsv2</td>
-<td>Intel Skylake</td>
-<td>2,4,8,16,32,48,64,72</td>
-<td>-</td>
-<td>-</td>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sinfo</code></td>
+<td>View information about SLURM nodes and partitions</td>
 </tr>
 <tr>
-<td>hbv2</td>
-<td>AMD Epyc Rome</td>
-<td>120</td>
-<td>-</td>
-<td>-</td>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">squeue</code></td>
+<td>List status of jobs in the <strong>queue</strong></td>
 </tr>
 <tr>
-<td>hbv3</td>
-<td>AMD Epyc Milan</td>
-<td>120</td>
-<td>-</td>
-<td>-</td>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">squeue --user [userid]</code></td>
+<td>Jobs by user</td>
 </tr>
 <tr>
-<td>hc</td>
-<td>Intel Skylake</td>
-<td>44</td>
-<td>-</td>
-<td>-</td>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">squeue --job [jobid]</code></td>
+<td>Jobs by jobid</td>
 </tr>
 <tr>
-<td>ncv3</td>
-<td>Intel Broadwell</td>
-<td>6</td>
-<td>Tesla V100</td>
-<td>1</td>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sbatch [jobscript]</code></td>
+<td>Submit a jobscript to the scheduler</td>
 </tr>
 <tr>
-<td>ncv3</td>
-<td>Intel Broadwell</td>
-<td>12</td>
-<td>Tesla V100</td>
-<td>2</td>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scancel [jobid]</code></td>
+<td>Cancel a job in the queue</td>
 </tr>
 <tr>
-<td>ncv3</td>
-<td>Intel Broadwell</td>
-<td>24</td>
-<td>Tesla V100</td>
-<td>4</td>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol hold [jobid]</code></td>
+<td>Hold a job in the queue</td>
 </tr>
 <tr>
-<td>ncv3r</td>
-<td>Intel Broadwell</td>
-<td>24</td>
-<td>Tesla V100</td>
-<td>4</td>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol release [jobid]</code></td>
+<td>Release a held job</td>
 </tr>
 <tr>
-<td>ndv2</td>
-<td>Intel Skylake</td>
-<td>40</td>
-<td>Tesla V100</td>
-<td>8</td>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol show job [jobid]</code></td>
+<td>View information about a job</td>
+</tr>
+<tr>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol show node nodename</code></td>
+<td>Get information of a node</td>
+</tr>
+<tr>
+<td><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scontrol show license</code></td>
+<td>Get licenses available on SLURM</td>
 </tr>
 </tbody>
 </table>
-<p>As mentioned above these instances are referenced in the slurm partition, along with the number of CPUs and the pricing tier.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
-    <h3 id="-Instance-types%20"><i class="fa fa-info-circle"></i> Instance types
-</h3>
-    <p>You can read more about the instance types here: <a href="https://docs.microsoft.com/en-us/azure/virtual-machines/sizes">https://docs.microsoft.com/en-us/azure/virtual-machines/sizes</a> including the specs for each instance type.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Choosing-the-right-instance">Choosing the right instance<a class="anchor-link" href="#Choosing-the-right-instance">&#182;</a></h3><p>Azure offers a range of virtual machines (VMs) optimized for both CPU and GPU-intensive workloads. Choosing the correct compute instance and partition will depend primarily on your specific scientific research requirements such as workload you are running, and will depend on cost, runtime and whether an interruption is acceptable (more on that in spot vs pay-as-you-go).</p>
-<p>The instance types currently available in Nimbus:</p>
-<ul>
-<li><strong>High performance compute</strong>: hbv2, hbv3 &amp; hc series</li>
-<li><strong>GPU enabled</strong>: ncv3, ncv3r, &amp; ndv2</li>
-<li><strong>Compute Optimised</strong>: fsv2</li>
-</ul>
-<p>The descriptions of the instances provided by Azure are as follows:</p>
-<ul>
-<li><strong>High Performance Compute</strong>: <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">Our fastest and most powerful CPU virtual machines with optional high-throughput network interfaces (RDMA).</code></li>
-<li><strong>GPU enabled</strong>: <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">Specialized virtual machines targeted for heavy graphic rendering and video editing, as well as model training and inferencing (ND) with deep learning. Available with single or multiple GPUs.</code></li>
-<li><strong>Compute Optimised</strong>: <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">High CPU-to-memory ratio. Good for medium traffic web servers, network appliances, batch processes, and application servers.</code></li>
-</ul>
-<p>Briefly:</p>
-<ul>
-<li>The <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hb*</code> instances are suggested for applications driven by memory bandwidth such as OpenFOAM and ANSYS.</li>
-<li>The <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hc*</code> &amp; <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">f*</code> instances are suggested for applications driven by compute such as HPL and ORCA.</li>
-<li>The <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">n*</code> partitions are for GPU accelerated workloads and visualization sessions.</li>
-</ul>
-<p>If in doubt - ask or test!</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Spot-vs-Pay-As-You-Go">Spot vs Pay-As-You-Go<a class="anchor-link" href="#Spot-vs-Pay-As-You-Go">&#182;</a></h3><p>We have mentioned the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">pricing tier</code> above, which is referenced in the slurm partition names. This pricing tier refers to the two different tiers:</p>
-<ul>
-<li>Spot</li>
-<li>Pay-As-You-go</li>
-</ul>
-<p>Spot pricing allows access to unused Azure compute capacity at large discounts, up to 90%, compared to Pay-As-You-Go prices. The drawback is that the job can be interrupted at any time and be evicted, depending on the available Azure capacity.</p>
-<p>Deciding whether to use the Spot or Pay-As-You-Go tiers will depend on how easy it is to pick up your calculation should it be evicted, the time scales for you calculation and your available budget.</p>
-<p>If your job is subject to an eviction you will recieve a message in the stdout of the job, and the status in the finance portal will be <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">EVICTED</code>.</p>
-<p>Users should use the <a href="https://cost-calc.hpc.bath.ac.uk/">Research Computing Cost Estimator</a> RCCE to calculate compute cost (please note that this estimator will only include the instances available in Nimbus). The payment process involves a finance check on the project balance prior to job submission:</p>
-<ol>
-<li>Job successfully completed: amount is deduced from user’s account. </li>
-<li>Node evicted: the University covers this cost if the simulation time is less than one hour. For more than one hour, the user will have the funds deducted from the project account. </li>
-<li>Job failure: the user will have the fund deducted from the project account.</li>
-</ol>
-<p><img src="./images/jobeviction.png" alt="job-eviction"></p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Restrictions-on-Instances">Restrictions on Instances<a class="anchor-link" href="#Restrictions-on-Instances">&#182;</a></h3><p>The only restriction put in place by Research Computing on the size of jobs you are able to run on Nimbus is to restrict the number of nodes you can run on using the fsv2 instances to one. These are RDMA connected, and you cannot run single jobs across multiple nodes, hence the restriction.</p>
-<p>All other restrictions are put in place by your Resource Allocation Administrators using the finance portal. Should you wish to change the restrictions either do so in the portal, or contact the person that has given you access to the resource allocation and request they do so.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Indicative-Cost-of-Instances">Indicative Cost of Instances<a class="anchor-link" href="#Indicative-Cost-of-Instances">&#182;</a></h3><p>It is important to emphasise that <strong>different compute instances will incur different costs</strong>.</p>
-<p>A cost calculator has been launched that lists the current prices for each compute instance, as well as allowing you to cost up resources for inclusion in funding proposals.</p>
-<p><a href="https://cost-calc.hpc.bath.ac.uk/">https://cost-calc.hpc.bath.ac.uk/</a></p>
 
 </div>
 </div>
@@ -13312,11 +13211,17 @@ div#notebook {
     <h3 id="-Key-Points%3A%20"><i class="fa fa-key"></i> Key Points:
 </h3>
     <ul>
-<li>Different compute instances are accessed through different slurm partitions</li>
-<li>The Slurm partitions follow the naming convention: <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[pricing tier]-[instance type]-[no of cpus-per-node]</code></li>
-<li>There are two pricing tiers: Spot and Pay-As-You-Go. Spot benefits from significant discounts (up to 90%), but may be evicted</li>
-<li>Different instances are suitable for different calculation types and will cost different amounts </li>
+<li>We use a scheduler to manage jobs on the cloud HPC service</li>
+<li>Nimbus uses the slurm scheduler</li>
+<li>Key commands are:<ul>
+<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sbatch</code> to submit jobs</li>
+<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sinfo</code> to view information about the service</li>
+<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">squeue</code> to view the queue</li>
+<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scancel</code> to delete a job</li>
 </ul>
+</li>
+</ul>
+<p>You can find further information about slurm and the commands here: <a href="http://slurm.schedmd.com/">http://slurm.schedmd.com/</a></p>
 </div>
 </div>
 </div>
@@ -13324,10 +13229,17 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <div class="w3-bar w3-blue-grey">
-<a href="./04_slurm.ipynb-back" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
+<a href="./04_slurm.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
 <a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
-<a href="./06_software.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
+<a href="./05_compute_instances.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
 </div>
 </div>
 </div>
