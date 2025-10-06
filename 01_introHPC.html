@@ -13171,10 +13171,6 @@ div#notebook {
 <p><img src="./images/serial_hpc_crop.png" alt="serial"></p>
 <p>On a cluster we have access to many cores on a single node, so in theory we could split up the analysis of a single file into multiple distinct processes and use as many cores to speed up the generation of an output file. This is called multithreading, i.e. using multiple threads or cores.</p>
 <p><img src="./images/multithreaded_hpc.png" alt="multi"></p>
-<p>Now, what if we had 3 input files? Well, we could process these files in serial, i.e. use the same core(s) over and over again, as shown in the image below.</p>
-<p><img src="./images/multithreaded_hpc_3samples.png" alt="multi"></p>
-<p>This is great, but it is not as efficient as multithreading each analysis, and using a set of 8 cores for each of the three input samples. This is actually considered to be true parallelization.</p>
-<p><img src="./images/multithreaded_hpc.png" alt="multi"></p>
 <p>As we have already seen, the power of HPC systems comes from parallelism, i.e. having lots of processors/disks etc. connected together rather than having more powerful components than your laptop or workstation.</p>
 <p>Often, when running research programs on HPC you will need to run a program that has been built to use the MPI (Message Passing Interface) parallel library. The MPI library allows programs to exploit multiple processing cores in parallel to allow researchers to model or simulate faster on larger problem sizes. The details of how MPI work are not important for this course or even to use programs that have been built using MPI; however, MPI programs typically have to be launched in job submission scripts in a different way to serial programs and users of parallel programs on HPC systems need to know how to do this. Specifically, launching parallel MPI programs typically requires four things:</p>
 
