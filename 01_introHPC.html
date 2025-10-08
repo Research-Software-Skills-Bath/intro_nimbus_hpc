@@ -13166,7 +13166,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Parallelisation">Parallelisation<a class="anchor-link" href="#Parallelisation">&#182;</a></h2><p>But how doe we use the resources on the cluster?</p>
+<h2 id="Parallelisation">Parallelisation<a class="anchor-link" href="#Parallelisation">&#182;</a></h2><p>But how do we use the resources on the cluster?</p>
 <p>Lets start with the idea of processing 1 input file  to generate 1 output (result) file. On a personal computer this would happen with a single core in the CPU.</p>
 <p><img src="./images/serial_hpc_crop.png" alt="serial"></p>
 <p>On a cluster we have access to many cores on a single or multiple nodes, the way a HPC can make a simulation faster is to distribute the simulation to different cores so that the CPUS working concurrently can speed up execution. For this work the software you want to run needs to be able to use the differents cores (or threads). This implies that it needs to be written and compiled with the appropriate parallel library MPI (message passing interface) for multicores and OpenMP for multi threading.</p>
