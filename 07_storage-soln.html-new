@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>08_transferring_files</title>
+<title>07_storage-soln</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13094,123 +13094,20 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Transferring-Files">Transferring Files<a class="anchor-link" href="#Transferring-Files">&#182;</a></h1><p><strong>Questions</strong></p>
-<ul>
-<li>How do I get files onto and off a HPC system?</li>
-</ul>
-<p><strong>Objectives</strong></p>
-<ul>
-<li>Be able to move your files to and from a HPC cluster</li>
-</ul>
-
+<h1 id="Solutions">Solutions<a class="anchor-link" href="#Solutions">&#182;</a></h1>
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Transferring-files">Transferring files<a class="anchor-link" href="#Transferring-files">&#182;</a></h2><p>Computing with a remote computer offers very limited use if we cannot get files to or from the cluster. There are several options for transferring data between computing resources, from command line options to GUI programs, which we will cover here.</p>
-<h2 id="Download-files-from-the-internet-using-wget">Download files from the internet using wget<a class="anchor-link" href="#Download-files-from-the-internet-using-wget">&#182;</a></h2><p>One of the most straightforward ways to download files is to use wget. Any file that can be downloaded in your web browser with an accessible link can be downloaded using wget. This is a quick way to download datasets or source code.</p>
-<p>The syntax is: wget <a href="https://some/link/to/a/file.tar.gz">https://some/link/to/a/file.tar.gz</a>. For example, download an example file with the following command:</p>
-<div class="highlight"><pre><span></span>nimbus-user:<span class="w"> </span>wget<span class="w"> </span>https://download.mozilla.org/?product<span class="o">=</span>firefox-latest-ssl<span class="p">&amp;</span><span class="nv">os</span><span class="o">=</span>linux64<span class="p">&amp;</span><span class="nv">lang</span><span class="o">=</span>en-US<span class="w"> </span>-O<span class="w"> </span>firefox.tar.bz2
-</pre></div>
-<p>Chek the file was indeed downloaded:</p>
-<div class="highlight"><pre><span></span>nimbus-user:<span class="nv">$ls</span>
-firefox.tar.bz2
-</pre></div>
-<p>And then lets clean it up:</p>
-<div class="highlight"><pre><span></span>nimbus-user:$<span class="w"> </span>rm<span class="w"> </span>firefox.tar.bz2
-</pre></div>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Transferring-single-files-and-folders-with-scp">Transferring single files and folders with scp<a class="anchor-link" href="#Transferring-single-files-and-folders-with-scp">&#182;</a></h2><p>To copy a single file to or from the cluster, we can use <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scp</code>. The syntax can be a little complex for new users, but we’ll break it down here:</p>
-<p>To transfer to another computer:</p>
-<div class="highlight"><pre><span></span>user@laptop:~$<span class="w"> </span>scp<span class="w"> </span>/path/to/local/file.txt<span class="w"> </span>userid@nimbus.hpc.bath.ac.uk:/path/on/remote/computer
-</pre></div>
-<p>To download from another computer:</p>
-<div class="highlight"><pre><span></span>user@laptop:~$<span class="w"> </span>scp<span class="w"> </span>userid@nimbus.hpc.bath.ac.uk:/path/on/remote/computer/file.txt<span class="w"> </span>/path/to/local/
-</pre></div>
-<p>Note that we can simplify doing this by shortening our paths. On the remote computer, everything after the : is relative to our home directory. We can simply just add a : and leave it at that if we don’t care where the file goes.</p>
-<div class="highlight"><pre><span></span>user@laptop:~$<span class="w"> </span>scp<span class="w"> </span>local-file.txt<span class="w"> </span>userid@nimbus.hpc.bath.ac.uk:
-</pre></div>
-<p>To recursively copy a directory, we just add the -r (recursive) flag:</p>
-<div class="highlight"><pre><span></span>user@laptop:~$<span class="w"> </span>scp<span class="w"> </span>-r<span class="w"> </span>some-local-folder/<span class="w"> </span>userid@nimbus.hpc.bath.ac.uk:target-directory/
-</pre></div>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="w3-panel w3-leftbar w3-border-yellow w3-pale-yellow w3-padding-small">
-    <h3 id="-Transfer-a-file%20"><i class="fa fa-pencil-square-o"></i> Transfer a file
+<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
+    <h3 id="-Go-home%20"><i class="fa fa-eye"></i> Go home
 </h3>
-    <p>Open a terminal on your system and try using the scp command to send a file to nimbus.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="rsync">rsync<a class="anchor-link" href="#rsync">&#182;</a></h2><p>As you gain experience with transferring files, you may find the scp command limiting. The rsync utility provides advanced features for file transfer and is typically faster compared to both scp and sftp (see below). It is especially useful for transferring large and/or many files and creating synced backup folders.</p>
-<p>The syntax is similar to scp. To transfer to another computer with commonly used options:</p>
-<div class="highlight"><pre><span></span><span class="o">[</span>local<span class="o">]</span>$<span class="w"> </span>rsync<span class="w"> </span>-avzP<span class="w"> </span>/path/to/local/file.txt<span class="w"> </span>userid@nimbus.hpc.bath.ac.uk:/path/on/remote/computer
+    <p>We can use the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$HOME</code> variable in exactly the same way as we used <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$SCRATCH</code>:</p>
+<div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span><span class="nv">$HOME</span>
+<span class="nb">pwd</span>
 </pre></div>
-<p>The a (archive) option preserves file timestamps and permissions among other things; the v (verbose) option gives verbose output to help monitor the transfer; the z (compression) option compresses the file during transit to reduce size and transfer time; and the P (partial/progress) option preserves partially transferred files in case of an interruption and also displays the progress of the transfer.</p>
-<p>To recursively copy a directory, we can use the same options:</p>
-<div class="highlight"><pre><span></span><span class="o">[</span>local<span class="o">]</span>$<span class="w"> </span>rsync<span class="w"> </span>-avzP<span class="w"> </span>/path/to/local/dir<span class="w"> </span>userid@nimbus.hpc.bath.ac.uk:/path/on/remote/computer
-</pre></div>
-<p>The a (archive) option implies recursion.</p>
-<p>To download a file, we simply change the source and destination:</p>
-<div class="highlight"><pre><span></span><span class="o">[</span>local<span class="o">]</span>$<span class="w"> </span>rsync<span class="w"> </span>-avzP<span class="w"> </span>userid@nimbus.hpc.bath.ac.uk:/path/on/remote/computer/file.txt<span class="w"> </span>/path/to/local/
-</pre></div>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Transferring-files-interactively-with-FileZilla-(sftp)">Transferring files interactively with FileZilla (sftp)<a class="anchor-link" href="#Transferring-files-interactively-with-FileZilla-(sftp)">&#182;</a></h2><p>FileZilla is a cross-platform client for downloading and uploading files to and from a remote computer. It is absolutely fool-proof and always works quite well. It uses the sftp protocol. You can read more about using the sftp protocol in the command line here.</p>
-<p>Download and install the FileZilla client from <a href="https://filezilla-project.org">https://filezilla-project.org</a>. After installing and opening the program, you should end up with a window with a file browser of your local system on the left hand side of the screen. When you connect to the cluster, your cluster files will appear on the right hand side.</p>
-<p>To connect to the cluster, we’ll just need to enter our credentials at the top of the screen:</p>
-<ul>
-<li>Host: sftp://nimbus.hpc.bath.ac.uk</li>
-<li>User: Your cluster username</li>
-<li>Password: Your cluster password</li>
-<li>Port: (leave blank to use the default port)</li>
-</ul>
-<p>Hit “Quickconnect” to connect! You should see your remote files appear on the right hand side of the screen. You can drag-and-drop files between the left (local) and right (remote) sides of the screen to transfer files.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Key-Points">Key Points<a class="anchor-link" href="#Key-Points">&#182;</a></h2><ul>
-<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">wget</code> downloads a file from the internet.</li>
-<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">scp</code> transfer files to and from your computer.</li>
-<li>You can use an SFTP client like FileZilla to transfer files through a GUI.</li>
-</ul>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<div class="w3-bar w3-blue-grey">
-<a href="./07_storage.ipynb-new" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
-<a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
-<a href="./09_running_jobs.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
 </div>
 </div>
 </div>
