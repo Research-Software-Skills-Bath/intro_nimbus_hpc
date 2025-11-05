@@ -13127,13 +13127,14 @@ div#notebook {
 <p><img src="./images/storage.png" alt="storage"></p>
 <p>The areas of the filesystem you should know about are:</p>
 <ul>
-<li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/shared/home</code>: 2TB Azure Managed Disk. Each user is given a home folder, with a strict quota of 5GB. You can check your quota usage with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">quota -s</code>. This area can be accessed from both the login and compute nodes. This disk is backed up daily, and could be used for storing e.g.:</p>
-<ul>
+<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/shared/home</code>: 2TB Azure Managed Disk. Each user is given a home folder, with a strict quota of 5GB. You can check your quota usage with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">quota -s</code>. This area can be accessed from both the login and compute nodes. This disk is backed up daily, and could be used for storing e.g.:<ul>
 <li>Code/scripts for your calculations</li>
-<li>Template jobscripts
-However, be advised this space is not for storag or for installing application; for these purposes use /campaign instead.</li>
+<li>Template jobscripts</li>
 </ul>
 </li>
+</ul>
+<p><strong>However, be advised this space is not for storage or for installing application; for these purposes use /campaign instead.</strong></p>
+<ul>
 <li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/</code>: each resource allocation has an associated campaign storage area located at <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign/&lt;resource_allocation_id&gt;</code>. The quota for this disk space is set to 50GB for each account (account admins can allocate this to each Resource Allocation in the research computing account management portal). <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">campaign</code> is where you would keep files required for a current project thrust. This is not designed for long-term archival storage, and data should regularly be moved out of this area. Campaign storage is a resizable logical file system based on logical volume management (LVM). The file systems are created in multiple managed disks. Initially we have one 16TB disk, which can be increased to 64TB, with the ability to add more disks.</p>
 </li>
 <li><p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/apps/</code>: 1TB Azure managed Disk. This space contains centrally compiled software for use by users.</p>
