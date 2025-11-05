@@ -13201,6 +13201,29 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Open-on-Demand">Open on Demand<a class="anchor-link" href="#Open-on-Demand">&#182;</a></h2><p>Research Computing have set up a new way to access the University's HPC services using <a href="https://openondemand.org/">Open on Demand</a>. Open on Demand provides a web based portal to the University's HPC clusters, allowing users to create and monitor workloads, run GUI applications and connect via SSH.</p>
+<p>To log into the service open <a href="https://ood.hpc.bath.ac.uk">https://ood.hpc.bath.ac.uk</a> in your web browser and log in using your University credentials:</p>
+<p><img src="./images/ood_login.png" alt="OOD Login"></p>
+<p>The first time you log-on you will need to follow the following steps in order to create your home directory:</p>
+<p>Click the `Open Shell to create home directory:</p>
+<p><img src="./images/ood_home.png" alt="OOD Login"></p>
+<p>Type yes in the shell window:</p>
+<p><img src="./images/ood_connect.png" alt="OOD Login"></p>
+<p>Insert your university password:</p>
+<p><img src="./images/ood_connected.png" alt="OOD Login"></p>
+<p>Close the window and click <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">Restart web Server</code> in the original window:</p>
+<p><img src="./images/ood_restart.png" alt="OOD Login"></p>
+<p>To Open up an ssh session click <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">Clusters</code> at the top of the screen and in the drop down menu select <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">&gt;_Nimbus HPC Shell Access</code>:</p>
+<p><img src="./images/ood_nimbus_shell_drop.png" alt="OOD Login"></p>
+<p>You will now have a secure shell connected to Nimbus open in a web based terminal hosted in the Open on Demand service:</p>
+<p><img src="./images/ood_ssh_session.png" alt="OOD Login"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Congratulations:-You-are-now-in-the-Cloud!">Congratulations: You are now in the Cloud!<a class="anchor-link" href="#Congratulations:-You-are-now-in-the-Cloud!">&#182;</a></h1>
 </div>
 </div>
@@ -13223,9 +13246,9 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="w3-bar w3-blue-grey">
-<a href="./01_introHPC.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
+<a href="./02_access_cloud.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
 <a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
-<a href="./02_access_cloud.ipynb-back" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
+<a href="./03_infrastructure.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
 </div>
 </div>
 </div>
