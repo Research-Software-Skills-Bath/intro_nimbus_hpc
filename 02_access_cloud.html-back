@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <link rel="icon" type="image/png" href="css/favicon.png"/>
 
-<title>03_infrastructure</title>
+<title>02_access_cloud</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13094,8 +13094,7 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Infrastructure">Infrastructure<a class="anchor-link" href="#Infrastructure">&#182;</a></h1><p>A brief overview of the Nimbus Infrastructure</p>
-
+<h1 id="Accessing-Nimbus">Accessing Nimbus<a class="anchor-link" href="#Accessing-Nimbus">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13107,12 +13106,12 @@ div#notebook {
 </h3>
     <p><strong>Questions</strong></p>
 <ul>
-<li>What does the underlying infrastructure for Nimbus look like?</li>
+<li>Where can I run the shell?</li>
+<li>How do I connect to Nimbus</li>
 </ul>
 <p><strong>Objectives</strong></p>
 <ul>
-<li>Know that the Nimbus has effectively has two clusters, in order to allow for continuous development of the system. </li>
-<li>KNow that when the reseacrh computing team switch from <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">blue</code> to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">green</code> you will need to log out and log back in.</li>
+<li>Get access to the Nimbus in a terminal,</li>
 </ul>
 </div>
 </div>
@@ -13121,12 +13120,88 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Nimbus-Infrastructure">Nimbus Infrastructure<a class="anchor-link" href="#Nimbus-Infrastructure">&#182;</a></h2><p>The underlying infrastructure for the Nimbus system can be seen below:</p>
-<p><img src="./images/Infrastructure.png" alt="infrastrcture"></p>
-<p>Services offered in the cloud can change rapidly, an Nimbus has been designed with this in mind. We use <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">blue-green</code> deployment, in order to allow rolling updates of the system with continuity of service. In essence there are two clusters, one <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> and one <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">inactive</code>.  In order to ensure high availablity and increase resilience, on each cluster there are two login-nodes, and two schedulers.</p>
-<p>As a user most of this will be unnoticable. The you will automatically be put onto one of the login nodes on the <em>active cluster</em> when you log onto the system.</p>
-<p>The only time you may have to take action as a result of this infrastructure is if the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> cluster is <em>switched</em>. In which case you will get a message to the terminal informing you about the upcoming switch, and you will have to log out and back in in order to continue your work. Your jobs will continue to run, and you will not have to resubmit them.</p>
+<p>In here we show details how to access The University of Bath's Cloud HPC Facility: Nimbus</p>
+<p>We can access Nimbus in several ways:</p>
+<ul>
+<li>From the terminal on your local machine</li>
+<li>From an <a href="https://www.ssh.com/academy/ssh/client#:~:text=An%20SSH%20client%20is%20a,Windows%20and%20IBM%20z%2FOS.">ssh client on your local machine</a> </li>
+</ul>
+<p>Accessing the new cloud HPC service is through ssh (secure shell).</p>
+<p>For the purposes of this workshop you can access the terminal on your own machine, use an ssh client or we can use the the new Open on Demand service to access the Nimbus login nodes in the terminal.</p>
 
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Getting-Started">Getting Started<a class="anchor-link" href="#Getting-Started">&#182;</a></h2><p>Bath's portfolio of Research Computing environments are open to all academics and doctoral students.</p>
+<p>Undergraduate students can also use the environments as part of their final year project.</p>
+<p>To use Nimbus, you must have funding and be assigned to a resource allocation within the <a href="https://rcam.bath.ac.uk/">Research Computing Account Management</a> (RCAM) portal.</p>
+<p>If you do not have grant funding available to use Nimbus, you must reach out to your <a href="https://www.bath.ac.uk/corporate-information/research-computing-champions.bho/">departmental champion</a> who will discuss your needs and assign you some funding from the departmental research computing budget, and arrange access through a resource allocation linked to the departmental RCAM account.</p>
+<p>If you have grant funding to use on Nimbus, you must <a href="https://www.bath.ac.uk/publications/research-computing-user-documentation/attachments.bho/hpc-budget-request-guide.pdf">first allocate this funding to HPC through Agresso</a>, then you must create an RCAM account on the RCAM portal using that Agresso code, finally you will be able to create resource allocations linked to that RCAM account and assign funding to yourself or other researchers. For more information on RCAM accounts and resource allocations visit the <a href="https://research-software-skills-bath.github.io/intro-portal/00_schedule.html">RCAM training material</a>.</p>
+<p>Once you are assigned to a resource allocation within the RCAM portal, your Bath credentials will be authorised to allow you to log in and use Nimbus.</p>
+<p><img src="./images/funding_routes.jpg" alt="funding_routes"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
+    <h3 id="-SSH%20"><i class="fa fa-info-circle"></i> SSH
+</h3>
+    <p>As HPC services are remote machines, interaction is done over an encrypted communication channel called Secure Shell version 2 (SSH-2). This allows command-line access to one of the login nodes of a HPC service, from which you can run commands or use a command-line text editor to edit files.</p>
+<h3 id="Security">Security<a class="anchor-link" href="#Security">&#182;</a></h3><p>Users and system operators have a shared responsibility to ensure the security of resources. System operators monitor the system, ensure security patches are up-to-date and that the systems is configured to restrict access correctly e.g. so that users cannot see each others data/files by default.</p>
+<p>Users should follow best practice to mitigate the risk of accounts and access details being compromised, e.g. we all know that we must keep our passwords secret. You shouldn't make your files accessible to others unless necessary.</p>
+<h3 id="Strong-passwords">Strong passwords<a class="anchor-link" href="#Strong-passwords">&#182;</a></h3><p>A strong password describes a password that is difficult to detect by both humans and computer programs, effectively protecting data from unauthorized access. A strong password consists of at least twelve characters (and the more characters, the stronger the password) that are a combination of letters, numbers and symbols  (@, !, &amp;, ^ etc) if allowed. Passwords are typically case-sensitive, so a strong password contains letters in both uppercase and lowercase. Strong passwords also do not contain words that can be found in a dictionary or parts of the user's own name.</p>
+<h3 id="SSH-key-pairs">SSH key pairs<a class="anchor-link" href="#SSH-key-pairs">&#182;</a></h3><p>An alternative to using a password is to use an ssh key-pair. A public key pair consists of two parts, a public part and a private part which are related. One is used to lock the message the other is used to unlock the message:</p>
+<ul>
+<li>The public part is used to lock (encrypt) the message so that it can be sent over the internet and can be shared.</li>
+<li>The private part is used to unlock (decrpyt) the message and should not be shared.</li>
+</ul>
+<h3 id="Set-up-a-key-pair">Set up a key pair<a class="anchor-link" href="#Set-up-a-key-pair">&#182;</a></h3><p>The SSH key pair consists of a private part and a public part. The public key can be put on remote machines to allow you to log-in without the use of a password. You keep the private part of the key secure on your local machine protected with a passphrase.</p>
+<p>Public key encryption uses fancy maths to enable secure communication over an open channel. There are a number of methods the most common being RSA) which uses prime numbers. If you are going to use this you should use a key size of at least 2048 and preferably 4096. Public keys can be broken with brute force computation and the longer the key the more secure it is.</p>
+<p>An alternative encryption method and the one we recommend you to use are based on EdDSA (Ed25519). For our purposes the key pair works in the same way. Your public key can go on the remote resource or service and the private key is kept protected on your local machine. You can generate a key pair with:</p>
+<p>ssh-keygen -o -a 100 -t ed25519</p>
+<ul>
+<li>ssh-keygen is the command to generate the key pair</li>
+<li>-o specifies to use a strong format to save the key</li>
+<li>-a 100 increases the strength of encryption with your passphrase</li>
+<li>-t ed25519 specifies the encryption method used</li>
+</ul>
+<p>When you create a SSH key pair you will be prompted to provide a passphrase. This is effectively password for your private key and like a password should be kept secret. Now when you try to use the key, you should be asked for your key pair passphase (which you entered when you created the key pair) rather than your remote machine password.</p>
+<p>Access to the HPC cloud service can be through key pairs, but <strong>ensure your key pair is protected by a passphrase</strong>.</p>
+<h3 id="More-details-on-ssh-and-security">More details on ssh and security<a class="anchor-link" href="#More-details-on-ssh-and-security">&#182;</a></h3><p>For further details on ssh, and security you can visit the Research Computing lesson:</p>
+<p><a href="https://arc-lessons.github.io/security/00_schedule.html">https://arc-lessons.github.io/security/00_schedule.html</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="w3-panel w3-leftbar w3-border-blue w3-pale-blue w3-padding-small">
+    <h3 id="-ssh-from-Windows-%26-Linux%2FMac%20"><i class="fa fa-info-circle"></i> ssh from Windows &amp; Linux/Mac
+</h3>
+    <p>In order to access Nimbus via ssh first connect to the <a href="https://www.bath.ac.uk/guides/setting-up-vpn-on-your-device/#setting-up-vpn">University of Bath VPN</a>.</p>
+<h3 id="Access-from-Windows">Access from Windows<a class="anchor-link" href="#Access-from-Windows">&#182;</a></h3><p>Recommended access via <a href="https://learn.microsoft.com/en-us/powershell/">Microsoft Powershell</a>, <a href="https://www.putty.org/">PuTTY</a> or <a href="https://mobaxterm.mobatek.net/">MobaXterm</a>.</p>
+<p>Alternatively you can install Windows Subsystem for Linux on your Windows machine and run a Linux distribution e.g: <a href="https://ubuntu.com/wsl">https://ubuntu.com/wsl</a>.</p>
+<p>To use the OpenSSH client on Windows to connect to Nimbus, simply open a PowerShell window or a command prompt window and run the ssh command:</p>
+<div class="highlight"><pre><span></span>ssh<span class="w"> </span>username@nimbus.hpc.bath.ac.uk
+</pre></div>
+<h3 id="Access-from-Linux/Mac:">Access from Linux/Mac:<a class="anchor-link" href="#Access-from-Linux/Mac:">&#182;</a></h3><p>Simply open a terminal and use the following command:</p>
+<div class="highlight"><pre><span></span>ssh<span class="w"> </span>username@nimbus.hpc.bath.ac.uk
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Congratulations:-You-are-now-in-the-Cloud!">Congratulations: You are now in the Cloud!<a class="anchor-link" href="#Congratulations:-You-are-now-in-the-Cloud!">&#182;</a></h1>
 </div>
 </div>
 </div>
@@ -13137,9 +13212,8 @@ div#notebook {
     <h3 id="-Key-Points%3A%20"><i class="fa fa-key"></i> Key Points:
 </h3>
     <ul>
-<li>There are two different clusters on the Nimbus system.</li>
-<li>You will automcatically be put on the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> cluster when you log in.</li>
-<li>If we switch <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">active</code> clusters in order to update the system you will have to log out and back in.</li>
+<li>We can access the Nimbus cluster via ssh to <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">nimbus.hpc.bath.ac.uk</code></li>
+<li>Open on Demand can be used to get a secure shell session directly in your web browser</li>
 </ul>
 </div>
 </div>
@@ -13149,9 +13223,9 @@ div#notebook {
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="w3-bar w3-blue-grey">
-<a href="./02_access_cloud.ipynb-back" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
+<a href="./02_access_cloud.html" class="w3-left-align w3-bar-item w3-button w3-mobile" style="width:33%"><h2><i class="fa fa-angle-double-left"></i> Previous</h2></a>
 <a href="./00_schedule.html" class="w3-bar-item w3-button w3-center w3-mobile" style="width:33%"><h2>Schedule</h2></a>
-<a href="./04_slurm.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
+<a href="./03_infrastructure.html" class="w3-right-align w3-bar-item w3-button w3-right w3-mobile" style="width:33%"><h2>Next <i class="fa fa-angle-double-right"></i></h2></a>
 </div>
 </div>
 </div>
