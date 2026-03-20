@@ -13147,7 +13147,7 @@ div#notebook {
 <li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/burstbuffer/*/</code>: when running a job on a compute node you can access one of 26 blob stores in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/burstbuffer/*/</code>. An environment variable <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code> is made available in the environment when running a job, and the job specific burstbuffer gets destroyed at the end of the job. You can use this space to store temporary files that are needed during a job run, bu not afterwards. e.g. by staging your input data in <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">$BURSTBUFFER</code>, running your job there, and then only copying the outputs you require back to either <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/campaign</code> or <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/home/</code>. The blob performance is 60 GBps shared by jobs running on each blob store (allocated in a round robin fashion).</li>
 </ul>
 <ul>
-<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/x/</code>: The parts of the University Research x-drive that are able to be mounted on the cluster can be found here. </li>
+<li><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/x/</code>: The parts of the University Research x-drive that are able to be mounted on the cluster can be found here. Please make sure you use the script <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">/sched/XDRIVE_FILES/mountXDrive</code> from a terminal prompt to load the drive. This only works on login nodes.</li>
 </ul>
 
 </div>
