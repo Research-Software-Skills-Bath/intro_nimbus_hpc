@@ -13092,25 +13092,60 @@ div#notebook {
   <h1 style="margin: 0; color: #111;">University of Bath</h1>
   <h2 style="margin: 5px 0 0 0; color: #111;">Research Computing Team (DDaT)</h2>
   <h3 style="margin: 5px 0 0 0; color: #222;">Nimbus HPC Documentation</h3>
-</div><div style="
+</div><div id="top-nav" style="
   margin: 10px 0 25px 0;
-  padding: 10px 0;
+  padding: 12px 0;
   border-bottom: 1px solid #ccc;
-  font-size: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 ">
 
-  <a href="00_schedule.html" style="margin-right: 18px;">Schedule</a>
-  <a href="01_introHPC.html" style="margin-right: 18px;">Intro HPC</a>
-  <a href="02_access_cloud.html" style="margin-right: 18px;">Access</a>
-  <a href="03_infrastructure.html" style="margin-right: 18px;">Infrastructure</a>
-  <a href="04_slurm.html" style="margin-right: 18px;">Slurm</a>
-  <a href="05_compute_instances.html" style="margin-right: 18px;">Compute</a>
-  <a href="06_software.html" style="margin-right: 18px;">Software</a>
-  <a href="07_storage.html" style="margin-right: 18px;">Storage</a>
-  <a href="08_transferring_files.html" style="margin-right: 18px;">Transfer</a>
-  <a href="09_running_jobs.html">Jobs</a>
+  <a href="00_schedule.html" class="top-nav-link">Schedule</a>
+  <a href="01_introHPC.html" class="top-nav-link">Intro HPC</a>
+  <a href="02_access_cloud.html" class="top-nav-link">Access</a>
+  <a href="03_infrastructure.html" class="top-nav-link">Infrastructure</a>
+  <a href="04_slurm.html" class="top-nav-link">Slurm</a>
+  <a href="05_compute_instances.html" class="top-nav-link">Compute</a>
+  <a href="06_software.html" class="top-nav-link">Software</a>
+  <a href="07_storage.html" class="top-nav-link">Storage</a>
+  <a href="08_transferring_files.html" class="top-nav-link">Transfer</a>
+  <a href="09_running_jobs.html" class="top-nav-link">Jobs</a>
 
-</div>
+</div><style>
+  .top-nav-link {
+    display: inline-block;
+    padding: 8px 14px;
+    background: #e6eaed;
+    color: #111 !important;
+    text-decoration: none !important;
+    border: 1px solid #b8c2c8;
+    border-radius: 6px;
+    font-weight: 600;
+  }
+
+  .top-nav-link:hover {
+    background: #d6dde2;
+  }
+
+  .top-nav-link.active {
+    background: #4f6470;
+    color: #fff !important;
+    border-color: #4f6470;
+  }
+</style><script>
+(function () {
+  var current = window.location.pathname.split("/").pop();
+  var links = document.querySelectorAll("#top-nav a.top-nav-link");
+
+  links.forEach(function(link) {
+    var href = link.getAttribute("href");
+    if (href === current) {
+      link.classList.add("active");
+    }
+  });
+})();
+</script>
 </div>
 </div>
 </div>
