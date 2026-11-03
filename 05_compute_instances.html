@@ -13184,14 +13184,15 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Slurm-partitions">Slurm partitions<a class="anchor-link" href="#Slurm-partitions">&#182;</a></h2><p>The new hpc service Nimbus provides user access to an array of different compute instances. These instances are accessed through different slurm partitions.</p>
-<p>In order to list the partitions issue the following command:</p>
-<p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">sinfo</code></p>
-<p>which will list the partitions, the nodes in the partitions, availability and the current state:</p>
-<p>The partitions follow a naming converntion</p>
+<h2 id="Slurm-partitions">Slurm partitions<a class="anchor-link" href="#Slurm-partitions">&#182;</a></h2><p>The new HPC service Nimbus provides user access to an array of different compute instances. These instances are accessed through different Slurm partitions.</p>
+<p>To list the partitions, issue the following command:</p>
+<div class="highlight"><pre><span></span>sinfo
+</pre></div>
+<p>This will list the partitions, the nodes in each partition, their availability and their current state.</p>
+<p>The partitions follow a naming convention:</p>
 <p><code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[pricing tier]-[instance type]-[no of cpus-per-node]</code></p>
-<p>So, for example the partition <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">spot-hbv3-120</code> is for spot priced hbv3 instances with 120 CPUs per node, while <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">paygo-hc-44</code> is for pay-as-you-go priced hc instances with 44 CPUs per node.</p>
-<p>However, please note that the naming is slightly different on the cost calculator (see below for Indicative cost of instances). For instance paygo-fsv2-1 would read F1Sv2 on the cost estimator.</p>
+<p>So, for example, the partition <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">spot-hbv3-120</code> is for spot-priced hbv3 instances with 120 CPUs per node, while <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">paygo-hc-44</code> is for pay-as-you-go-priced hc instances with 44 CPUs per node.</p>
+<p>Please note that the naming is slightly different on the cost calculator (see <a href="#Indicative-Cost-of-Instances">Indicative Cost of Instances</a> below). For instance, <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">paygo-fsv2-1</code> would read <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">F1Sv2</code> on the cost estimator.</p>
 
 </div>
 </div>
@@ -13321,19 +13322,42 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Spot-vs-Pay-As-You-Go">Spot vs Pay-As-You-Go<a class="anchor-link" href="#Spot-vs-Pay-As-You-Go">&#182;</a></h3><p>We have mentioned the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">pricing tier</code> above, which is referenced in the slurm partition names. This pricing tier refers to the two different tiers:</p>
+<h3 id="Spot-vs-Pay-As-You-Go">Spot vs Pay-As-You-Go<a class="anchor-link" href="#Spot-vs-Pay-As-You-Go">&#182;</a></h3><p>We have mentioned the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">pricing tier</code> above, which is referenced in the Slurm partition names. There are two pricing tiers:</p>
 <ul>
-<li>Spot</li>
-<li>Pay-As-You-go</li>
+<li><strong>Spot</strong></li>
+<li><strong>Pay-As-You-Go (paygo)</strong></li>
 </ul>
-<p>Spot pricing allows access to unused Azure compute capacity at large discounts, up to 90%, compared to Pay-As-You-Go prices. The drawback is that the job can be interrupted at any time and be evicted, depending on the available Azure capacity.</p>
-<p>Deciding whether to use the Spot or Pay-As-You-Go tiers will depend on how easy it is to pick up your calculation should it be evicted, the time scales for you calculation and your available budget.</p>
-<p>If your job is subject to an eviction you will recieve a message in the stdout of the job, and the status in the finance portal will be <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">EVICTED</code>.</p>
-<p>Users should use the <a href="https://cost-calc.hpc.bath.ac.uk/">Research Computing Cost Estimator</a> RCCE to calculate compute cost (please note that this estimator will only include the instances available in Nimbus). The payment process involves a finance check on the project balance prior to job submission:</p>
+<p>Spot pricing gives access to unused Azure compute capacity at large discounts, up to 90%, compared to Pay-As-You-Go prices. The drawback is that spot capacity is not guaranteed: a node can be evicted at any time, depending on the available Azure capacity.</p>
+<h4 id="Caveats-when-using-spot">Caveats when using spot<a class="anchor-link" href="#Caveats-when-using-spot">&#182;</a></h4><p>Given the price benefit it is tempting to use spot for everything, but spot nodes come with some practical caveats:</p>
+<ul>
+<li><p><strong>Nodes can fail while they are being spun up.</strong> It is not uncommon for a spot node to be evicted while it is still being created and configured, before your job has started. When this happens Slurm will show the job state as <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">NODE_FAIL</code>.</p>
+</li>
+<li><p><strong>High-demand instances may not be available for long periods.</strong> Microsoft limits how many spot instances of a given size it makes available in a region. Popular sizes, such as <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hbv3</code> and the 36-core <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">nva</code>, can fail to come up for extended periods (hours, sometimes days) when that capacity has been used up. This is a restriction on the Azure side, not a problem with your job script or your account, and there is nothing Research Computing can do to make that capacity available.</p>
+</li>
+<li><p><strong>Jobs can be evicted part way through.</strong> Once running, a spot node can still be reclaimed by Azure at any time.</p>
+</li>
+</ul>
+<h4 id="What-happens-to-your-job">What happens to your job<a class="anchor-link" href="#What-happens-to-your-job">&#182;</a></h4><p>All batch jobs on Nimbus are <strong>requeued by default</strong> when they fail because a node was lost, unless you opt out with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">--no-requeue</code>. This means that after a <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">NODE_FAIL</code> or an eviction your job goes back into the queue and Slurm tries again automatically.</p>
+<p>Be aware that:</p>
+<ul>
+<li>It can take <strong>a few hours</strong> for a requeued job to start again, and it may then fail again. This cycle can repeat several times before the job finally runs to completion.</li>
+<li><strong>If your job writes checkpoints</strong>, each restart resumes from the last checkpoint, so progress is kept between attempts.</li>
+<li><strong>If your job does not checkpoint</strong>, each restart begins from scratch, and any progress made before the eviction is lost.</li>
+</ul>
+<p><strong>Checkpointing is your responsibility.</strong> Slurm and Nimbus do not save or restore the state of your calculation: a requeued job simply runs your job script again from the top. The logic to write checkpoints during a run, and to detect and resume from the latest checkpoint when the job restarts, has to be built into your job script and/or code by you, the researcher. Many scientific packages provide checkpoint/restart options, so check your software's documentation and make sure your job script picks up an existing checkpoint on restart rather than starting a fresh calculation (and overwriting your previous output).</p>
+<p>If your job is evicted you will receive a message in the stdout of the job, and the status in the finance portal will be <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">EVICTED</code>.</p>
+<h4 id="Recommendations">Recommendations<a class="anchor-link" href="#Recommendations">&#182;</a></h4><ul>
+<li><strong>Use spot</strong> for short jobs, testing and debugging, jobs that checkpoint regularly, and work where the time to result is not critical.</li>
+<li><strong>Use Pay-As-You-Go</strong> for long-running jobs without checkpointing, jobs with a deadline, interactive or visualisation sessions you need now, and multi-node jobs, where losing one node loses the whole job.</li>
+<li><strong>Build checkpoint/restart into your workflow</strong> wherever your software supports it, so that each requeue picks up where the last attempt stopped.</li>
+<li><strong>If a spot job keeps being requeued</strong> or sits pending for a long time, consider cancelling it and resubmitting to the equivalent <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">paygo-</code> partition, or to a different instance type that suits your workload (e.g. <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hbv3</code> instead of <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hbv2</code>).</li>
+</ul>
+<p>Deciding between Spot and Pay-As-You-Go comes down to how easily your calculation can be restarted if it is evicted, how quickly you need the results, and your available budget.</p>
+<h4 id="Costs-and-charging">Costs and charging<a class="anchor-link" href="#Costs-and-charging">&#182;</a></h4><p>Users should use the <a href="https://cost-calc.hpc.bath.ac.uk/">Research Computing Cost Estimator</a> (RCCE) to calculate compute costs (please note that the estimator only includes the instances available in Nimbus). A finance check is carried out on the project balance before a job is submitted, and charges are then applied as follows:</p>
 <ol>
-<li>Job successfully completed: amount is deduced from user’s account. </li>
-<li>Node evicted: the University covers this cost if the simulation time is less than one hour. For more than one hour, the user will have the funds deducted from the project account. </li>
-<li>Job failure: the user will have the fund deducted from the project account.</li>
+<li><strong>Job completed successfully:</strong> the cost is deducted from the project account.</li>
+<li><strong>Node evicted:</strong> the University covers the cost if the job had run for less than one hour. For more than one hour, the cost is deducted from the project account.</li>
+<li><strong>Job failed:</strong> the cost is deducted from the project account.</li>
 </ol>
 <p><img src="./images/jobeviction.png" alt="job-eviction"></p>
 
@@ -13343,8 +13367,9 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Restrictions-on-Instances">Restrictions on Instances<a class="anchor-link" href="#Restrictions-on-Instances">&#182;</a></h3><p>The only restriction put in place by Research Computing on the size of jobs you are able to run on Nimbus is to restrict the number of nodes you can run on using the fsv2 instances to one. These are RDMA connected, and you cannot run single jobs across multiple nodes, hence the restriction.</p>
-<p>All other restrictions are put in place by your Resource Allocation Administrators using the finance portal. Should you wish to change the restrictions either do so in the portal, or contact the person that has given you access to the resource allocation and request they do so.</p>
+<h3 id="Restrictions-on-Instances">Restrictions on Instances<a class="anchor-link" href="#Restrictions-on-Instances">&#182;</a></h3><p>The only restriction Research Computing places on the size of jobs you can run on Nimbus is that jobs using the fsv2 instances are limited to one node. These instances are not RDMA connected, so single jobs cannot run efficiently across multiple nodes, hence the restriction.</p>
+<p>All other restrictions are set by your Resource Allocation Administrators in the finance portal. If you need a restriction changed, either change it in the portal yourself or ask the person who gave you access to the resource allocation to do so.</p>
+<p>Separately, Azure itself may limit the availability of some instance types, particularly on the spot tier (see <a href="#Caveats-when-using-spot">Caveats when using spot</a> above).</p>
 
 </div>
 </div>
@@ -13366,10 +13391,13 @@ div#notebook {
     <h3 id="-Key-Points%3A%20"><i class="fa fa-key"></i> Key Points:
 </h3>
     <ul>
-<li>Different compute instances are accessed through different slurm partitions</li>
+<li>Different compute instances are accessed through different Slurm partitions</li>
 <li>The Slurm partitions follow the naming convention: <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">[pricing tier]-[instance type]-[no of cpus-per-node]</code></li>
-<li>There are two pricing tiers: Spot and Pay-As-You-Go. Spot benefits from significant discounts (up to 90%), but may be evicted</li>
-<li>Different instances are suitable for different calculation types and will cost different amounts </li>
+<li>There are two pricing tiers: Spot and Pay-As-You-Go. Spot has large discounts (up to 90%), but nodes may be evicted during a job, may fail while being spun up (<code style="background-color:#F7F7F7;border:1px solid #CFCFCF">NODE_FAIL</code>), and high-demand sizes (e.g. hbv3, nva-36) can be unavailable for extended periods</li>
+<li>Batch jobs are requeued automatically after a node failure (unless you use <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">--no-requeue</code>); with checkpointing they resume where they stopped, without it they start again from scratch</li>
+<li>Checkpoint writing and resuming is not provided by Nimbus: it must be built into your job script and/or code by you</li>
+<li>Use Pay-As-You-Go for long, deadline-driven or non-restartable jobs</li>
+<li>Different instances are suitable for different calculation types and will cost different amounts</li>
 </ul>
 </div>
 </div>
