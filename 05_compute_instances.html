@@ -13324,40 +13324,37 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Spot-vs-Pay-As-You-Go">Spot vs Pay-As-You-Go<a class="anchor-link" href="#Spot-vs-Pay-As-You-Go">&#182;</a></h3><p>We have mentioned the <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">pricing tier</code> above, which is referenced in the Slurm partition names. There are two pricing tiers:</p>
 <ul>
-<li><strong>Spot</strong></li>
-<li><strong>Pay-As-You-Go (paygo)</strong></li>
+<li>Spot</li>
+<li>Pay-As-You-Go (paygo)</li>
 </ul>
 <p>Spot pricing gives access to unused Azure compute capacity at large discounts, up to 90%, compared to Pay-As-You-Go prices. The drawback is that spot capacity is not guaranteed: a node can be evicted at any time, depending on the available Azure capacity.</p>
 <h4 id="Caveats-when-using-spot">Caveats when using spot<a class="anchor-link" href="#Caveats-when-using-spot">&#182;</a></h4><p>Given the price benefit it is tempting to use spot for everything, but spot nodes come with some practical caveats:</p>
 <ul>
-<li><p><strong>Nodes can fail while they are being spun up.</strong> It is not uncommon for a spot node to be evicted while it is still being created and configured, before your job has started. When this happens Slurm will show the job state as <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">NODE_FAIL</code>.</p>
-</li>
-<li><p><strong>High-demand instances may not be available for long periods.</strong> Microsoft limits how many spot instances of a given size it makes available in a region. Popular sizes, such as <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hbv3</code> and the 36-core <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">nva</code>, can fail to come up for extended periods (hours, sometimes days) when that capacity has been used up. This is a restriction on the Azure side, not a problem with your job script or your account, and there is nothing Research Computing can do to make that capacity available.</p>
-</li>
-<li><p><strong>Jobs can be evicted part way through.</strong> Once running, a spot node can still be reclaimed by Azure at any time.</p>
-</li>
+<li>Nodes can fail while they are being spun up. It is not uncommon for a spot node to be evicted while it is still being created and configured, before your job has started. When this happens Slurm will show the job state as <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">NODE_FAIL</code>.</li>
+<li>High-demand instances may not be available for long periods. Microsoft limits how many spot instances of a given size it makes available in a region. Popular sizes, such as <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hbv3</code> and the 36-core <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">nva</code>, can fail to come up for extended periods (hours, sometimes days) when that capacity has been used up. This is a restriction on the Azure side, not a problem with your job script or your account, and there is nothing Research Computing can do to make that capacity available.</li>
+<li>Jobs can be evicted part way through. Once running, a spot node can still be reclaimed by Azure at any time.</li>
 </ul>
-<h4 id="What-happens-to-your-job">What happens to your job<a class="anchor-link" href="#What-happens-to-your-job">&#182;</a></h4><p>All batch jobs on Nimbus are <strong>requeued by default</strong> when they fail because a node was lost, unless you opt out with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">--no-requeue</code>. This means that after a <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">NODE_FAIL</code> or an eviction your job goes back into the queue and Slurm tries again automatically.</p>
+<h4 id="What-happens-to-your-job">What happens to your job<a class="anchor-link" href="#What-happens-to-your-job">&#182;</a></h4><p>All batch jobs on Nimbus are requeued by default when they fail because a node was lost, unless you opt out with <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">--no-requeue</code>. This means that after a <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">NODE_FAIL</code> or an eviction your job goes back into the queue and Slurm tries again automatically.</p>
 <p>Be aware that:</p>
 <ul>
-<li>It can take <strong>a few hours</strong> for a requeued job to start again, and it may then fail again. This cycle can repeat several times before the job finally runs to completion.</li>
-<li><strong>If your job writes checkpoints</strong>, each restart resumes from the last checkpoint, so progress is kept between attempts.</li>
-<li><strong>If your job does not checkpoint</strong>, each restart begins from scratch, and any progress made before the eviction is lost.</li>
+<li>It can take a few hours for a requeued job to start again, and it may then fail again. This cycle can repeat several times before the job finally runs to completion.</li>
+<li>If your job writes checkpoints, each restart resumes from the last checkpoint, so progress is kept between attempts.</li>
+<li>If your job does not checkpoint, each restart begins from scratch, and any progress made before the eviction is lost.</li>
 </ul>
-<p><strong>Checkpointing is your responsibility.</strong> Slurm and Nimbus do not save or restore the state of your calculation: a requeued job simply runs your job script again from the top. The logic to write checkpoints during a run, and to detect and resume from the latest checkpoint when the job restarts, has to be built into your job script and/or code by you, the researcher. Many scientific packages provide checkpoint/restart options, so check your software's documentation and make sure your job script picks up an existing checkpoint on restart rather than starting a fresh calculation (and overwriting your previous output).</p>
 <p>If your job is evicted you will receive a message in the stdout of the job, and the status in the finance portal will be <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">EVICTED</code>.</p>
+<h4 id="Checkpointing-is-your-responsibility">Checkpointing is your responsibility<a class="anchor-link" href="#Checkpointing-is-your-responsibility">&#182;</a></h4><p>Slurm and Nimbus do not save or restore the state of your calculation: a requeued job simply runs your job script again from the top. The logic to write checkpoints during a run, and to detect and resume from the latest checkpoint when the job restarts, has to be built into your job script and/or code by you, the researcher. Many scientific packages provide checkpoint/restart options, so check your software's documentation and make sure your job script picks up an existing checkpoint on restart rather than starting a fresh calculation (and overwriting your previous output).</p>
 <h4 id="Recommendations">Recommendations<a class="anchor-link" href="#Recommendations">&#182;</a></h4><ul>
-<li><strong>Use spot</strong> for short jobs, testing and debugging, jobs that checkpoint regularly, and work where the time to result is not critical.</li>
-<li><strong>Use Pay-As-You-Go</strong> for long-running jobs without checkpointing, jobs with a deadline, interactive or visualisation sessions you need now, and multi-node jobs, where losing one node loses the whole job.</li>
-<li><strong>Build checkpoint/restart into your workflow</strong> wherever your software supports it, so that each requeue picks up where the last attempt stopped.</li>
-<li><strong>If a spot job keeps being requeued</strong> or sits pending for a long time, consider cancelling it and resubmitting to the equivalent <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">paygo-</code> partition, or to a different instance type that suits your workload (e.g. <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hbv3</code> instead of <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hbv2</code>).</li>
+<li>Use spot for short jobs, testing and debugging, jobs that checkpoint regularly, and work where the time to result is not critical.</li>
+<li>Use Pay-As-You-Go for long-running jobs without checkpointing, jobs with a deadline, interactive or visualisation sessions you need now, and multi-node jobs, where losing one node loses the whole job.</li>
+<li>Build checkpoint/restart into your workflow wherever your software supports it, so that each requeue picks up where the last attempt stopped.</li>
+<li>If a spot job keeps being requeued or sits pending for a long time, consider cancelling it and resubmitting to the equivalent <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">paygo-</code> partition, or to a different instance type that suits your workload (e.g. <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hbv2</code> instead of <code style="background-color:#F7F7F7;border:1px solid #CFCFCF">hbv3</code>).</li>
 </ul>
 <p>Deciding between Spot and Pay-As-You-Go comes down to how easily your calculation can be restarted if it is evicted, how quickly you need the results, and your available budget.</p>
 <h4 id="Costs-and-charging">Costs and charging<a class="anchor-link" href="#Costs-and-charging">&#182;</a></h4><p>Users should use the <a href="https://cost-calc.hpc.bath.ac.uk/">Research Computing Cost Estimator</a> (RCCE) to calculate compute costs (please note that the estimator only includes the instances available in Nimbus). A finance check is carried out on the project balance before a job is submitted, and charges are then applied as follows:</p>
 <ol>
-<li><strong>Job completed successfully:</strong> the cost is deducted from the project account.</li>
-<li><strong>Node evicted:</strong> the University covers the cost if the job had run for less than one hour. For more than one hour, the cost is deducted from the project account.</li>
-<li><strong>Job failed:</strong> the cost is deducted from the project account.</li>
+<li>Job completed successfully: the cost is deducted from the project account.</li>
+<li>Node evicted: the University covers the cost if the job had run for less than one hour. For more than one hour, the cost is deducted from the project account.</li>
+<li>Job failed: the cost is deducted from the project account.</li>
 </ol>
 <p><img src="./images/jobeviction.png" alt="job-eviction"></p>
 
