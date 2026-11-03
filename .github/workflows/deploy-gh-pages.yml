@@ -9,11 +9,11 @@ jobs:
         name: Build and publish Python distribution
         runs-on: ubuntu-latest
         steps:
-        - uses: actions/checkout@master
+        - uses: actions/checkout@v4
         - name: Initialize Python 3.x
-          uses: actions/setup-python@v1
+          uses: actions/setup-python@v5
           with:
-              python-version:  3.10.20
+              python-version: '3.10'
 
         - name: Install dependencies
           run: |
@@ -28,7 +28,7 @@ jobs:
               nbfancy html
 
         - name: Deploy
-          uses: JamesIves/github-pages-deploy-action@4.1.5
+          uses: JamesIves/github-pages-deploy-action@v4
           with:
               branch: gh-pages
               folder: html
